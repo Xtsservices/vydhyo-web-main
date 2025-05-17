@@ -174,7 +174,7 @@ export default function AdminDashboard() {
                         {/* Admin dashboard image */}
                         
                         <img
-                            src="https://doccure-react.dreamguystech.com/template/assets/img/admin-screens.png"
+                        src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80"
                             alt="Admin Dashboard"
                             style={{
                                 position: "relative",
