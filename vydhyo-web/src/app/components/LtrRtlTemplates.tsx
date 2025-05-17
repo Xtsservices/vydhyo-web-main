@@ -36,7 +36,7 @@ const LtrRtlTemplates = () => {
             loader={({ src }) => src} // Bypass Next.js optimization for external images
             unoptimized // Disable optimization for external images
           />
-          Multiple Template Options
+          Vydhyo : care you can trust at Home
         </motion.button>
         <motion.div 
           style={circleStyle}
@@ -60,7 +60,7 @@ const LtrRtlTemplates = () => {
         transition={{ duration: 0.5, delay: 0.2 }}
         viewport={{ once: true }}
       >
-        Readymade LTR & RTL Templates
+        Readymade LTR & RTL
       </motion.h2>
 
       {/* Templates Wrapper */}
