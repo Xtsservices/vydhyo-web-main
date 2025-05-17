@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useRef } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 
@@ -52,49 +52,69 @@ const FeatureCarousel: React.FC = () => {
 
   const [isPaused, setIsPaused] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
-  const [cardWidth, setCardWidth] = useState(0);
   const carouselRef = useRef<HTMLDivElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
+  const animationRef = useRef<number>(0);
+  const lastUpdateTime = useRef<number>(0);
+  const progress = useRef<number>(0);
 
-  // Calculate how many cards to show based on screen width
   const getCardsToShow = () => {
-    if (typeof window === 'undefined') return 3;
-    if (window.innerWidth < 768) return 1;
-    if (window.innerWidth < 1024) return 2;
+    if (!wrapperRef.current) return 3;
+    const width = wrapperRef.current.offsetWidth;
+    if (width < 768) return 1;
+    if (width < 1024) return 2;
     return 3;
   };
 
-  const [cardsToShow, setCardsToShow] = useState(getCardsToShow());
+  const [cardsToShow, setCardsToShow] = useState(3);
+  const [cardWidth, setCardWidth] = useState(0);
 
-  useEffect(() => {
-    const handleResize = () => {
-      setCardsToShow(getCardsToShow());
-      if (wrapperRef.current && carouselRef.current) {
-        const newCardWidth = wrapperRef.current.offsetWidth / cardsToShow;
-        setCardWidth(newCardWidth);
-      }
-    };
+  const updateLayout = () => {
+    if (!wrapperRef.current) return;
+    
+    const newCardsToShow = getCardsToShow();
+    setCardsToShow(newCardsToShow);
+    setCardWidth(wrapperRef.current.offsetWidth / newCardsToShow);
+  };
 
+  const handleResize = () => {
+    updateLayout();
+  };
+
+  // Initialize and handle resize
+  React.useLayoutEffect(() => {
+    updateLayout();
     window.addEventListener('resize', handleResize);
-    handleResize(); // Initial calculation
-
     return () => window.removeEventListener('resize', handleResize);
-  }, [cardsToShow]);
+  }, []);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (!isPaused) {
+  const animate = (timestamp: number) => {
+    if (!lastUpdateTime.current) lastUpdateTime.current = timestamp;
+    const delta = timestamp - lastUpdateTime.current;
+    lastUpdateTime.current = timestamp;
+
+    if (!isPaused) {
+      progress.current += delta / 3000; // 3 seconds per slide
+      if (progress.current >= 1) {
+        progress.current = 0;
         setCurrentIndex(prev => (prev + 1) % features.length);
       }
-    }, 3000);
+    }
 
-    return () => clearInterval(interval);
-  }, [isPaused, features.length]);
+    if (carouselRef.current) {
+      const offset = -currentIndex * cardWidth - (progress.current * cardWidth);
+      carouselRef.current.style.transform = `translateX(${offset}px)`;
+    }
 
-  const getTransformValue = () => {
-    if (cardsToShow >= features.length) return 0;
-    return -currentIndex * cardWidth;
+    animationRef.current = requestAnimationFrame(animate);
   };
+
+  React.useLayoutEffect(() => {
+    animationRef.current = requestAnimationFrame(animate);
+    return () => {
+      if (animationRef.current) cancelAnimationFrame(animationRef.current);
+    };
+  }, [currentIndex, isPaused, cardWidth]);
 
   return (
     <div className="feature-carousel-container">
@@ -118,7 +138,6 @@ const FeatureCarousel: React.FC = () => {
           ref={carouselRef}
           className="feature-carousel"
           style={{
-            transform: `translateX(${getTransformValue()}px)`,
             width: `${features.length * cardWidth}px`
           }}
         >
@@ -126,7 +145,7 @@ const FeatureCarousel: React.FC = () => {
             <motion.div 
               key={index}
               className="feature-card"
-              style={{ width: `${cardWidth - 32}px` }} // Subtracting gap
+              style={{ width: `${cardWidth - 32}px` }}
               whileHover={{ scale: 1.03 }}
               transition={{ type: "spring", stiffness: 400, damping: 10 }}
             >
@@ -160,7 +179,10 @@ const FeatureCarousel: React.FC = () => {
           <motion.button
             key={index}
             className={`indicator ${index === currentIndex ? 'active' : ''}`}
-            onClick={() => setCurrentIndex(index)}
+            onClick={() => {
+              setCurrentIndex(index);
+              progress.current = 0;
+            }}
             aria-label={`View ${features[index].title}`}
             whileHover={{ scale: 1.2 }}
             whileTap={{ scale: 0.9 }}
@@ -212,9 +234,8 @@ const FeatureCarousel: React.FC = () => {
 
         .feature-carousel {
           display: flex;
-          transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+          transition: transform 0.7s ease-out;
           gap: 2rem;
-          padding: 0 1rem;
         }
 
         .feature-card {
@@ -226,7 +247,6 @@ const FeatureCarousel: React.FC = () => {
           border: 1px solid rgba(255, 255, 255, 0.1);
           transition: all 0.3s ease;
           box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-          margin-right: 1rem;
         }
 
         .feature-image-container {
