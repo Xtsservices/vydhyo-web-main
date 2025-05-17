@@ -1,43 +1,149 @@
-import React from 'react';
+"use client"; // Add this directive at the very top
+
+import React, { useEffect } from 'react';
+import { motion, useAnimation } from 'framer-motion';
+import { useInView } from 'react-intersection-observer';
 
 const IndexPage = () => {
+  const controls = useAnimation();
+  const [ref, inView] = useInView({
+    threshold: 0.1,
+    triggerOnce: false
+  });
+
+  useEffect(() => {
+    if (inView) {
+      controls.start('visible');
+    } else {
+      controls.start('hidden');
+    }
+  }, [controls, inView]);
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2
+      }
+    }
+  };
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        duration: 0.6,
+        ease: "easeOut"
+      }
+    }
+  };
+
+  const imageVariants = {
+    hidden: { scale: 0.9, opacity: 0 },
+    visible: {
+      scale: 1,
+      opacity: 1,
+      transition: {
+        duration: 0.8,
+        ease: "easeOut"
+      }
+    }
+  };
+
   return (
     <div style={pageStyle}>
-
-      <section style={sectionStyle}>
+      <motion.section 
+        style={sectionStyle}
+        ref={ref}
+        initial="hidden"
+        animate={controls}
+        variants={containerVariants}
+      >
         {/* === LEFT TEXT SIDE === */}
-        <div style={leftContentStyle}>
-          <div style={badgeStyle}>
+        <motion.div style={leftContentStyle} variants={itemVariants}>
+          <motion.div 
+            style={badgeStyle}
+            whileHover={{ scale: 1.05 }}
+            transition={{ type: "spring", stiffness: 400, damping: 10 }}
+          >
             <span style={{ color: '#f97316', fontSize: '16px' }}>★ ★ ★ ★ ★</span>
-            <span> Used by 7000+ happy users</span>
-          </div>
+            <span> Trusted by 10,000+ doctors & patients</span>
+          </motion.div>
 
-          <h1 style={titleStyle}>
-            <span style={{ color: '#2563eb' }}>React & HTML</span> Clinics & Doctors 
-            Online Appointment Booking
-            Reactjs Template
-          </h1>
+          <motion.h1 style={titleStyle} variants={itemVariants}>
+            <span style={{ color: '#2563eb' }}>Vydhyo</span> - Complete Digital Healthcare 
+            <br />Solution for Modern Clinics
+          </motion.h1>
 
-          <p style={descriptionStyle}>
-            Doctor Appointment Booking Template is a appointment management and patient
-            management template. We provide a simple and easy booking online system.
-          </p>
+          <motion.p style={descriptionStyle} variants={itemVariants}>
+            Vydhyo is an all-in-one doctor appointment booking platform that transforms your 
+            healthcare practice. Manage appointments, patient records, prescriptions, and 
+            telemedicine consultations seamlessly with our React-powered solution.
+          </motion.p>
 
-          <div style={buttonContainerStyle}>
-            <button style={liveDemoButton}>🔴 Live Demo</button>
-            <button style={seePricingButton}>💲 See Pricing</button>
-          </div>
-        </div>
+          <motion.div style={buttonContainerStyle} variants={itemVariants}>
+            <motion.button 
+              style={liveDemoButton}
+              whileHover={{ 
+                scale: 1.05,
+                backgroundColor: "#333333"
+              }}
+              whileTap={{ scale: 0.95 }}
+            >
+              🚀 Live Demo
+            </motion.button>
+            <motion.button 
+              style={seePricingButton}
+              whileHover={{ 
+                scale: 1.05,
+                backgroundColor: "#f3f4f6"
+              }}
+              whileTap={{ scale: 0.95 }}
+            >
+              💲 See Pricing Plans
+            </motion.button>
+          </motion.div>
+
+          <motion.div style={featureGridStyle} variants={itemVariants}>
+            <div style={featureItemStyle}>
+              <div style={featureIconStyle}>📅</div>
+              <span>Smart Appointment Scheduling</span>
+            </div>
+            <div style={featureItemStyle}>
+              <div style={featureIconStyle}>💊</div>
+              <span>Digital Prescriptions</span>
+            </div>
+            <div style={featureItemStyle}>
+              <div style={featureIconStyle}>🩺</div>
+              <span>Telemedicine Integration</span>
+            </div>
+            <div style={featureItemStyle}>
+              <div style={featureIconStyle}>📊</div>
+              <span>Analytics Dashboard</span>
+            </div>
+          </motion.div>
+        </motion.div>
 
         {/* === RIGHT IMAGE SIDE === */}
-        <div style={rightImageContainer}>
-          <img
-            src="/your-doccure-screenshot.png" // Replace with your actual image path
-            alt="Doccure Screenshot"
+        <motion.div 
+          style={rightImageContainer}
+          variants={imageVariants}
+        >
+          <motion.img
+            src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80"
+            alt="Vydhyo Doctor App Screenshot"
             style={imageStyle}
+            whileHover={{ scale: 1.02 }}
+            transition={{ type: "spring", stiffness: 400, damping: 10 }}
           />
-        </div>
-      </section>
+          <div style={imageOverlayStyle}>
+            <div style={overlayTextStyle}>Vydhyo Doctor Dashboard</div>
+          </div>
+        </motion.div>
+      </motion.section>
     </div>
   );
 };
@@ -46,53 +152,63 @@ const IndexPage = () => {
 const pageStyle: React.CSSProperties = {
   backgroundColor: '#f6f9ff',
   minHeight: '100vh',
-  fontFamily: 'sans-serif',
+  fontFamily: "'Inter', sans-serif",
+  overflowX: 'hidden'
 };
 
 const sectionStyle: React.CSSProperties = {
   display: 'flex',
   flexDirection: 'row',
-  flexWrap: 'wrap',
+  flexWrap: 'wrap-reverse',
   justifyContent: 'space-between',
-  padding: '4rem 2.5rem',
-  gap: '2rem',
+  alignItems: 'center',
+  padding: '6rem 2.5rem',
+  gap: '3rem',
+  maxWidth: '1400px',
+  margin: '0 auto',
 };
 
 const leftContentStyle: React.CSSProperties = {
   flex: 1,
   minWidth: '320px',
-  maxWidth: '600px',
+  maxWidth: '650px',
 };
 
 const badgeStyle: React.CSSProperties = {
   backgroundColor: '#ffffff',
-  padding: '0.5rem 1rem',
+  padding: '0.5rem 1.25rem',
   borderRadius: '9999px',
   display: 'inline-flex',
   alignItems: 'center',
   gap: '0.5rem',
-  boxShadow: '0 1px 4px rgba(0, 0, 0, 0.1)',
+  boxShadow: '0 4px 6px rgba(0, 0, 0, 0.05)',
   fontSize: '14px',
   fontWeight: 500,
+  marginBottom: '1rem',
 };
 
 const titleStyle: React.CSSProperties = {
-  fontSize: '2.5rem',
-  fontWeight: 800,
-  marginTop: '1.5rem',
-  lineHeight: 1.4,
+  fontSize: '3rem',
+  fontWeight: 600,
+  margin: '1.5rem 0',
+  lineHeight: 1.2,
   color: '#111827',
+  background: 'linear-gradient(90deg, #2563eb 0%, #7c3aed 100%)',
+  WebkitBackgroundClip: 'text',
+  WebkitTextFillColor: 'transparent',
+  backgroundClip: 'text',
 };
 
 const descriptionStyle: React.CSSProperties = {
-  marginTop: '1rem',
+  margin: '1.5rem 0',
   color: '#4B5563',
-  fontSize: '1.125rem',
+  fontSize: '1.25rem',
   lineHeight: 1.6,
+  maxWidth: '90%',
 };
 
 const buttonContainerStyle: React.CSSProperties = {
-  marginTop: '2rem',
+  margin: '2.5rem 0',
   display: 'flex',
   gap: '1rem',
   flexWrap: 'wrap',
@@ -101,38 +217,85 @@ const buttonContainerStyle: React.CSSProperties = {
 const liveDemoButton: React.CSSProperties = {
   backgroundColor: '#000000',
   color: '#ffffff',
-  padding: '0.75rem 1.5rem',
-  borderRadius: '9999px',
+  padding: '0.875rem 2rem',
+  borderRadius: '12px',
   fontWeight: 600,
-  fontSize: '14px',
+  fontSize: '16px',
   border: 'none',
   cursor: 'pointer',
+  boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+  transition: 'all 0.3s ease',
 };
 
 const seePricingButton: React.CSSProperties = {
   backgroundColor: '#ffffff',
   color: '#000000',
   border: '1px solid #D1D5DB',
-  padding: '0.75rem 1.5rem',
-  borderRadius: '9999px',
+  padding: '0.875rem 2rem',
+  borderRadius: '12px',
   fontWeight: 600,
-  fontSize: '14px',
+  fontSize: '16px',
   cursor: 'pointer',
+  boxShadow: '0 4px 6px rgba(0, 0, 0, 0.05)',
+  transition: 'all 0.3s ease',
 };
 
 const rightImageContainer: React.CSSProperties = {
   flex: 1,
-  minWidth: '300px',
+  minWidth: '350px',
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
+  position: 'relative',
 };
 
 const imageStyle: React.CSSProperties = {
-  borderRadius: '1rem',
-  boxShadow: '0 20px 40px rgba(0, 0, 0, 0.1)',
+  borderRadius: '1.5rem',
+  boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.15)',
   width: '100%',
-  maxWidth: '550px',
+  maxWidth: '600px',
+  zIndex: 1,
+};
+
+const imageOverlayStyle: React.CSSProperties = {
+  position: 'absolute',
+  bottom: '-1rem',
+  right: '2rem',
+  backgroundColor: 'white',
+  padding: '0.5rem 1.5rem',
+  borderRadius: '9999px',
+  boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
+  zIndex: 2,
+};
+
+const overlayTextStyle: React.CSSProperties = {
+  fontWeight: 600,
+  color: '#2563eb',
+  fontSize: '0.875rem',
+};
+
+const featureGridStyle: React.CSSProperties = {
+  display: 'grid',
+  gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+  gap: '1rem',
+  marginTop: '2rem',
+};
+
+const featureItemStyle: React.CSSProperties = {
+  display: 'flex',
+  alignItems: 'center',
+  gap: '0.75rem',
+  backgroundColor: '#ffffff',
+  padding: '0.75rem 1rem',
+  borderRadius: '0.75rem',
+  boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)',
+  fontSize: '0.95rem',
+  fontWeight: 500,
+  transition: 'all 0.3s ease',
+};
+
+const featureIconStyle: React.CSSProperties = {
+  fontSize: '1.25rem',
 };
 
 export default IndexPage;

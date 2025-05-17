@@ -1,13 +1,18 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import { Row, Col, Card } from 'antd';
+import React, { useState } from "react";
+import { Row, Col, Card } from "antd";
 import {
   FileTextOutlined,
   DatabaseOutlined,
   AppstoreAddOutlined,
   DashboardOutlined,
-} from '@ant-design/icons';
+  CalendarOutlined,
+  TeamOutlined,
+  MedicineBoxOutlined,
+  LineChartOutlined,
+} from "@ant-design/icons";
+import { motion } from "framer-motion";
 
 interface Feature {
   icon: React.ReactNode;
@@ -19,48 +24,80 @@ interface Feature {
 
 const features: Feature[] = [
   {
-    icon: <FileTextOutlined />,
-    title: 'Feature Rich Template',
+    icon: <CalendarOutlined />,
+    title: "Smart Appointment System",
     description:
-      'Includes essential features such as a navigation bar, hero section, services section, testimonials.',
-    iconBgColor: '#8b5cf6',
-    iconColor: 'white',
+      "Automated scheduling with real-time availability, reminders, and rescheduling options for patients.",
+    iconBgColor: "#8b5cf6",
+    iconColor: "white",
   },
   {
-    icon: <DatabaseOutlined />,
-    title: '80+ Versatile Inner Pages',
+    icon: <TeamOutlined />,
+    title: "Patient Management",
     description:
-      'Creating versatile inner pages for a website allows you to present various types of content',
-    iconBgColor: '#10b981',
-    iconColor: 'white',
+      "Comprehensive patient profiles with medical history, prescriptions, and visit records all in one place.",
+    iconBgColor: "#10b981",
+    iconColor: "white",
   },
   {
-    icon: <AppstoreAddOutlined />,
-    title: 'Mix & Match Section Blocks',
+    icon: <MedicineBoxOutlined />,
+    title: "E-Prescriptions",
     description:
-      'Creating versatile inner pages for a website allows you to present various types',
-    iconBgColor: '#22d3ee',
-    iconColor: 'white',
+      "Generate digital prescriptions that can be shared instantly with patients and pharmacies.",
+    iconBgColor: "#22d3ee",
+    iconColor: "white",
   },
   {
-    icon: <DashboardOutlined />,
-    title: 'Dashboard Designs',
+    icon: <LineChartOutlined />,
+    title: "Analytics Dashboard",
     description:
-      'Multiple Dashboard for Clinic Admin, Doctors & Patient for various information',
-    iconBgColor: '#f97316',
-    iconColor: 'white',
+      "Track clinic performance, patient flow, and financial metrics with intuitive visualizations.",
+    iconBgColor: "#f97316",
+    iconColor: "white",
   },
 ];
 
 const ChooseUsSection: React.FC = () => {
   const [hoverIndex, setHoverIndex] = useState<number | null>(null);
 
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.2,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { y: 50, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        duration: 0.6,
+        ease: "easeOut",
+      },
+    },
+  };
+
   return (
-    <div style={sectionStyle}>
+    <motion.div 
+      style={sectionStyle}
+      initial="hidden"
+      whileInView="visible"
+      variants={containerVariants}
+      viewport={{ once: true, margin: "-100px" }}
+    >
       <div style={containerStyle}>
         {/* Left side */}
-        <div style={leftContentStyle}>
-          <div style={pillStyle}>
+        <motion.div style={leftContentStyle} variants={itemVariants}>
+          <motion.div 
+            style={pillStyle}
+            whileHover={{ scale: 1.05 }}
+            transition={{ type: "spring", stiffness: 400, damping: 10 }}
+          >
             <div style={pillIconStyle}>
               <svg
                 width="16"
@@ -78,112 +115,141 @@ const ChooseUsSection: React.FC = () => {
                 <line x1="3" y1="10" x2="21" y2="10" />
               </svg>
             </div>
-            <span style={pillTextStyle}>Multiple Template Options</span>
-          </div>
+            <span style={pillTextStyle}>Why Choose Vydhyo</span>
+          </motion.div>
 
-          <h2 style={headerStyle}>
-            Choose Us for Seamless Booking Management Template
-          </h2>
+          <motion.h2 style={headerStyle} variants={itemVariants}>
+            Transform Your Clinic with <span style={{ color: "#3b82f6" }}>Vydhyo</span> Digital Healthcare Solution
+          </motion.h2>
 
-          <p style={subHeaderStyle}>
-            Our main aim is to provide simple and effective online services for
-            doctor appointments.
-          </p>
+          <motion.p style={subHeaderStyle} variants={itemVariants}>
+            Vydhyo is a comprehensive doctor appointment and clinic management platform designed to streamline your practice, enhance patient experience, and boost operational efficiency.
+          </motion.p>
 
-          <Row gutter={48} style={{ marginTop: 32 }}>
-            <Col>
-              <div style={statBoxStyle}>
-                <span style={statNumberStyle}>
-                  17<span style={plusStyle}>+</span>
-                </span>
-                <p style={statLabelStyle}>Unique Demos</p>
-              </div>
-            </Col>
-            <Col>
-              <div style={statBoxStyle}>
-                <span style={statNumberStyle}>
-                  150<span style={plusStyle}>+</span>
-                </span>
-                <p style={statLabelStyle}>Well Designed Pages</p>
-              </div>
-            </Col>
-            <Col>
-              <div style={statBoxStyle}>
-                <span style={statNumberStyle}>
-                  6<span style={plusStyle}>+</span>
-                </span>
-                <p style={statLabelStyle}>Booking & Detail Page</p>
-              </div>
-            </Col>
-          </Row>
-        </div>
+          <motion.div variants={itemVariants}>
+            <Row gutter={48} style={{ marginTop: 32 }}>
+              <Col>
+                <motion.div 
+                  style={statBoxStyle}
+                  whileHover={{ scale: 1.05 }}
+                >
+                  <span style={statNumberStyle}>
+                    10K<span style={plusStyle}>+</span>
+                  </span>
+                  <p style={statLabelStyle}>Happy Patients</p>
+                </motion.div>
+              </Col>
+              <Col>
+                <motion.div 
+                  style={statBoxStyle}
+                  whileHover={{ scale: 1.05 }}
+                >
+                  <span style={statNumberStyle}>
+                    500<span style={plusStyle}>+</span>
+                  </span>
+                  <p style={statLabelStyle}>Partner Clinics</p>
+                </motion.div>
+              </Col>
+              <Col>
+                <motion.div 
+                  style={statBoxStyle}
+                  whileHover={{ scale: 1.05 }}
+                >
+                  <span style={statNumberStyle}>
+                    99<span style={plusStyle}>%</span>
+                  </span>
+                  <p style={statLabelStyle}>Uptime Reliability</p>
+                </motion.div>
+              </Col>
+            </Row>
+          </motion.div>
+        </motion.div>
 
         {/* Right side */}
         <div style={rightContentStyle}>
           {features.map((feature, index) => {
             const isHovered = hoverIndex === index;
             return (
-              <div 
+              <motion.div
                 key={index}
                 style={{
-                  position: 'relative',
-                  overflow: 'hidden',
-                  borderRadius: 8,
+                  position: "relative",
+                  overflow: "hidden",
+                  borderRadius: 12,
                 }}
                 onMouseEnter={() => setHoverIndex(index)}
                 onMouseLeave={() => setHoverIndex(null)}
+                variants={itemVariants}
+                whileHover={{ y: -5 }}
               >
-                <div 
+                <motion.div
                   style={{
-                    position: 'absolute',
+                    position: "absolute",
                     bottom: 0,
                     left: 0,
                     right: 0,
-                    height: isHovered ? '100%' : 0,
-                    background: 'linear-gradient(to top, #0ea5e9 0%, #3b82f6 100%)',
-                    transition: 'height 0.3s ease',
+                    height: isHovered ? "100%" : 0,
+                    background:
+                      "linear-gradient(to top, #0ea5e9 0%, #3b82f6 100%)",
+                    transition: "height 0.3s ease",
                     zIndex: 1,
+                  }}
+                  animate={{
+                    height: isHovered ? "100%" : 0,
                   }}
                 />
                 <Card
                   hoverable
                   style={{
                     ...cardStyle,
-                    position: 'relative',
+                    position: "relative",
                     zIndex: 2,
-                    background: '#0f172a',
-                    color: isHovered ? 'white' : '#cbd5e1',
-                    border: 'none',
-                    transition: 'color 0.3s ease',
+                    background: "#0f172a",
+                    color: isHovered ? "white" : "#cbd5e1",
+                    border: "none",
                   }}
-                  bodyStyle={{
-                    padding: 24,
-                    textAlign: 'left',
+                  styles={{
+                    body: {
+                      padding: 24,
+                      textAlign: "left",
+                    },
                   }}
                 >
-                  <div
+                  <motion.div
                     style={{
                       ...iconWrapperStyle,
-                      backgroundColor: isHovered ? 'white' : feature.iconBgColor,
-                      transition: 'background-color 0.3s ease',
-                      display: 'flex',
-                      justifyContent: 'center',
-                      alignItems: 'center',
+                      backgroundColor: isHovered
+                        ? "white"
+                        : feature.iconBgColor,
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                    }}
+                    animate={{
+                      backgroundColor: isHovered ? "white" : feature.iconBgColor,
                     }}
                   >
-                    {React.cloneElement(feature.icon as React.ReactElement, {
-                      style: {
-                        color: isHovered ? '#3b82f6' : feature.iconColor,
-                        fontSize: 24,
-                        transition: 'color 0.3s ease',
-                      },
-                    })}
-                  </div>
+                    {React.cloneElement(
+                      feature.icon as React.ReactElement<{
+                        style?: React.CSSProperties;
+                      }>,
+                      {
+                        style: {
+                          ...(
+                            feature.icon as React.ReactElement<{
+                              style?: React.CSSProperties;
+                            }>
+                          ).props.style,
+                          color: isHovered ? "#3b82f6" : feature.iconColor,
+                          fontSize: 24,
+                        },
+                      }
+                    )}
+                  </motion.div>
                   <h3
                     style={{
                       ...cardTitleStyle,
-                      color: isHovered ? 'white' : '#cbd5e1',
-                      transition: 'color 0.3s ease',
+                      color: isHovered ? "white" : "#cbd5e1",
                     }}
                   >
                     {feature.title}
@@ -191,148 +257,168 @@ const ChooseUsSection: React.FC = () => {
                   <p
                     style={{
                       ...cardDescStyle,
-                      color: isHovered ? 'white' : '#94a3b8',
-                      transition: 'color 0.3s ease',
+                      color: isHovered ? "white" : "#94a3b8",
                     }}
                   >
                     {feature.description}
                   </p>
                 </Card>
-              </div>
+              </motion.div>
             );
           })}
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
-// Styles
+// Enhanced Styles
 const sectionStyle: React.CSSProperties = {
-  backgroundColor: '#0a132d',
-  padding: '4rem 2rem',
-  color: 'white',
+  backgroundColor: "#0a132d",
+  padding: "6rem 2rem",
+  color: "white",
   fontFamily: "'Inter', sans-serif",
+  backgroundImage: "radial-gradient(circle at 25% 25%, rgba(59, 130, 246, 0.1) 0%, transparent 50%)",
 };
 
 const containerStyle: React.CSSProperties = {
   maxWidth: 1200,
-  margin: '0 auto',
-  display: 'flex',
+  margin: "0 auto",
+  display: "flex",
   gap: 40,
-  flexWrap: 'wrap',
-  justifyContent: 'space-between',
+  flexWrap: "wrap",
+  justifyContent: "space-between",
 };
 
 const leftContentStyle: React.CSSProperties = {
-  flex: '1 1 400px',
+  flex: "1 1 400px",
   maxWidth: 480,
 };
 
 const pillStyle: React.CSSProperties = {
-  display: 'inline-flex',
-  alignItems: 'center',
+  display: "inline-flex",
+  alignItems: "center",
   gap: 8,
   borderRadius: 9999,
-  padding: '6px 16px',
-  border: '2px solid #8b5cf6',
-  backgroundColor: 'white',
-  width: 'fit-content',
-  fontWeight: 500,
+  padding: "8px 20px",
+  border: "2px solid #8b5cf6",
+  backgroundColor: "white",
+  width: "fit-content",
+  fontWeight: 600,
   fontSize: 14,
-  color: '#4b5563',
+  color: "#4b5563",
   marginBottom: 16,
-  userSelect: 'none',
+  userSelect: "none",
+  boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
 };
 
 const pillIconStyle: React.CSSProperties = {
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-  color: '#8b5cf6',
-  width: 18,
-  height: 18,
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  color: "#8b5cf6",
+  width: 20,
+  height: 20,
 };
 
 const pillTextStyle: React.CSSProperties = {
-  color: '#4b5563',
+  color: "#4b5563",
   fontWeight: 600,
 };
 
 const headerStyle: React.CSSProperties = {
-  fontSize: 28,
-  fontWeight: 700,
-  margin: '8px 0 16px',
-  color: 'white',
+  fontSize: "2.5rem",
+  fontWeight: 800,
+  margin: "16px 0 24px",
+  color: "white",
   lineHeight: 1.2,
+  background: "linear-gradient(90deg, #ffffff, #cbd5e1)",
+  WebkitBackgroundClip: "text",
+  WebkitTextFillColor: "transparent",
+  backgroundClip: "text",
 };
 
 const subHeaderStyle: React.CSSProperties = {
-  fontSize: 16,
-  color: '#a1a9bb',
-  lineHeight: 1.5,
+  fontSize: "1.125rem",
+  color: "#a1a9bb",
+  lineHeight: 1.6,
   maxWidth: 440,
+  marginBottom: "1.5rem",
 };
 
 const statBoxStyle: React.CSSProperties = {
-  textAlign: 'center',
+  textAlign: "center",
+  padding: "16px",
+  borderRadius: "8px",
+  backgroundColor: "rgba(30, 58, 138, 0.2)",
+  backdropFilter: "blur(4px)",
+  border: "1px solid rgba(59, 130, 246, 0.2)",
 };
 
 const statNumberStyle: React.CSSProperties = {
-  fontSize: 32,
+  fontSize: "2rem",
   fontWeight: 700,
-  color: 'white',
-  userSelect: 'none',
+  color: "white",
+  userSelect: "none",
+  background: "linear-gradient(90deg, #3b82f6, #93c5fd)",
+  WebkitBackgroundClip: "text",
+  WebkitTextFillColor: "transparent",
+  backgroundClip: "text",
 };
 
 const plusStyle: React.CSSProperties = {
-  color: '#f43f5e',
+  color: "#f43f5e",
   fontWeight: 700,
   marginLeft: 4,
 };
 
 const statLabelStyle: React.CSSProperties = {
   fontSize: 14,
-  color: 'white',
-  marginTop: 4,
+  color: "#cbd5e1",
+  marginTop: 8,
   fontWeight: 500,
 };
 
 const rightContentStyle: React.CSSProperties = {
-  display: 'grid',
-  gridTemplateColumns: 'repeat(2, 1fr)',
+  display: "grid",
+  gridTemplateColumns: "repeat(2, 1fr)",
   gap: 24,
-  flex: '1 1 400px',
+  flex: "1 1 400px",
   maxWidth: 600,
 };
 
 const cardStyle: React.CSSProperties = {
-  backgroundColor: 'transparent',
-  borderRadius: 8,
-  cursor: 'pointer',
+  backgroundColor: "transparent",
+  borderRadius: 12,
+  cursor: "pointer",
+  transition: "all 0.3s ease",
+  height: "100%",
 };
 
 const iconWrapperStyle: React.CSSProperties = {
-  borderRadius: 8,
-  width: 40,
-  height: 40,
-  marginBottom: 16,
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
+  borderRadius: 12,
+  width: 48,
+  height: 48,
+  marginBottom: 20,
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  transition: "all 0.3s ease",
 };
 
 const cardTitleStyle: React.CSSProperties = {
   fontWeight: 700,
-  fontSize: 16,
-  marginBottom: 8,
-  color: '#cbd5e1',
+  fontSize: 18,
+  marginBottom: 12,
+  color: "#cbd5e1",
+  transition: "all 0.3s ease",
 };
 
 const cardDescStyle: React.CSSProperties = {
   fontSize: 14,
-  lineHeight: 1.5,
-  color: '#94a3b8',
+  lineHeight: 1.6,
+  color: "#94a3b8",
+  transition: "all 0.3s ease",
 };
 
 export default ChooseUsSection;

@@ -4,7 +4,7 @@ const Header = () => {
   return (
     <header style={headerStyle}>
       <div style={logoStyle}>
-        DOCC<span style={logoSpanStyle}>URE</span>
+        VYD<span style={logoSpanStyle}>HYO </span>
       </div>
       <nav style={navStyle}>
         <a href="#" style={activeLinkStyle}>Home</a>

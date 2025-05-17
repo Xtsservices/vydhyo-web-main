@@ -3,6 +3,17 @@ import IndexPage from "./pages/index";
 import FeaturePills from './components/ScrollingFeaturePills';
 import LtrRtlTemplates from './components/LtrRtlTemplates';
 import ChooseUsSection from './components/ChooseUsSection';
+import MultiTemplateLayout from './components/MultiTemplateLayout';
+import FrontEndDashboards from './components/FrontEndDashboards';
+import FeatureSlider from "./components/FeatureSlider";
+import KeyFeatures from "./components/keyFeatures";
+import AdminDashboard from "./components/AdminDashboard";
+import Unleash from "./components/Unleash";
+import CustomerStories from "./components/CustomerStories";
+import Pricing from "./components/Pricing";
+import FeaturesAtGlance from "./components/FeaturesAtGlance";
+import QandA from "./components/Q&A";
+import Footer from "./components/Footer";
 
 export default function Home() {
   return (
@@ -12,6 +23,18 @@ export default function Home() {
     <FeaturePills />
     <LtrRtlTemplates />
     <ChooseUsSection />
+    <MultiTemplateLayout />
+    <FeaturePills />
+    <FrontEndDashboards/>
+    <FeatureSlider />
+    <KeyFeatures />
+    <AdminDashboard />
+    <Unleash />
+    <CustomerStories />
+    <Pricing />
+    <FeaturesAtGlance />
+    <QandA />
+    <Footer />
    </>
   );
 }
