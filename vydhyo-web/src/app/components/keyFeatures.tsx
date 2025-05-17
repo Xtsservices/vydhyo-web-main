@@ -9,10 +9,64 @@ const features = [
     description: "Ability to schedule, reschedule, or cancel appointments easily",
     icon: "📅"
   },
-  // ... (keep all other feature objects the same)
+  {
+    title: "Patient Management",
+    description: "Database of patient records, including medical history & notes",
+    icon: "👨‍⚕️"
+  },
+  {
+    title: "Doctor Availability",
+    description: "Set & manage doctors' availability, block out time for vacations",
+    icon: "⏱️"
+  },
+  {
+    title: "Automated Notifications",
+    description: "Notifications for staff about changes in schedules",
+    icon: "🔔"
+  },
+  {
+    title: "Payment Processing",
+    description: "Integration with payment gateways for co-pays or fees",
+    icon: "💳"
+  },
+  {
+    title: "Reporting & Analytics",
+    description: "Generate reports on appointment types, cancellations",
+    icon: "📊"
+  },
+  {
+    title: "Telehealth Integration",
+    description: "Secure messaging for pre-appointment communication",
+    icon: "🖥️"
+  },
+  {
+    title: "Different Booking Types",
+    description: "Collect specific information from patients before the appointment",
+    icon: "📝"
+  },
+  {
+    title: "Feedback & Reviews",
+    description: "Collect patient feedback after appointments",
+    icon: "⭐"
+  },
+  {
+    title: "Multi-User Access",
+    description: "Different access levels for staff, doctors, administrators",
+    icon: "👥"
+  },
+  {
+    title: "Mobile Friendly",
+    description: "Mobile-friendly interface for managing bookings on the go",
+    icon: "📱"
+  },
+  {
+    title: "Cancel & Rescheduling",
+    description: "Ability to reschedule directly through the template",
+    icon: "🔄"
+  },
 ];
 
-// First define all atomic components that will be referenced
+// Define IconWrapper first since it's referenced in FeatureCard
 const IconWrapper = styled(motion.div)`
   width: 48px;
   height: 48px;
@@ -27,6 +81,7 @@ const IconWrapper = styled(motion.div)`
   transition: all 0.3s ease;
 `;
 
+// Define FeatureTitle and FeatureDescription before FeatureCard
 const FeatureTitle = styled(motion.h3)`
   font-weight: 600;
   font-size: 1.125rem;
@@ -45,7 +100,6 @@ const FeatureDescription = styled(motion.p)`
   transition: color 0.3s ease;
 `;
 
-// Then define composite components that reference them
 const FeatureCard = styled(motion.div)`
   background: #F9FAFB;
   border-radius: 1rem;
@@ -103,7 +157,6 @@ const FeatureHeader = styled.div`
   z-index: 1;
 `;
 
-// Then layout components
 const FeatureSection = styled(motion.section)`
   background: #fff;
   padding: 5rem 0;
@@ -147,9 +200,16 @@ const Title = styled(motion.h2)`
 
 const FeaturesGrid = styled(motion.div)`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  grid-template-columns: repeat(4, 1fr);
   gap: 1.5rem;
   justify-content: center;
+
+  @media (max-width: 1024px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  @media (max-width: 600px) {
+    grid-template-columns: 1fr;
+  }
 `;
 
 const KeyFeatures = () => {
@@ -238,7 +298,6 @@ const KeyFeatures = () => {
         </Title>
 
         <FeaturesGrid
-          as={motion.div}
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"

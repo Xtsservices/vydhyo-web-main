@@ -5,17 +5,17 @@ const features = [
     {
         title: "3+ Detailed Pages of Doctor & Patients",
         description: "Explore comprehensive profiles and dashboards for both doctors and patients, ensuring clarity and ease of use.",
-        image: "/images/doctor-patient.jpg", // Replace with your actual image path
+    image: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
     },
     {
         title: "Virtual Appointment Screens",
         description: "Seamlessly schedule and join virtual appointments with a user-friendly interface designed for efficiency.",
-        image: "/images/virtual-appointment.jpg", // Replace with your actual image path
+    image: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
     },
     {
         title: "Well Organized Booking Screens",
         description: "Effortlessly manage bookings with organized screens that simplify the appointment process for everyone.",
-        image: "/images/booking-screen.jpg", // Replace with your actual image path
+    image: 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
     },
 ];
 
