@@ -52,8 +52,34 @@ const FeatureCarousel: React.FC = () => {
 
   const [isPaused, setIsPaused] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [cardWidth, setCardWidth] = useState(0);
   const carouselRef = useRef<HTMLDivElement>(null);
-  const duplicatedFeatures = [...features, ...features];
+  const wrapperRef = useRef<HTMLDivElement>(null);
+
+  // Calculate how many cards to show based on screen width
+  const getCardsToShow = () => {
+    if (typeof window === 'undefined') return 3;
+    if (window.innerWidth < 768) return 1;
+    if (window.innerWidth < 1024) return 2;
+    return 3;
+  };
+
+  const [cardsToShow, setCardsToShow] = useState(getCardsToShow());
+
+  useEffect(() => {
+    const handleResize = () => {
+      setCardsToShow(getCardsToShow());
+      if (wrapperRef.current && carouselRef.current) {
+        const newCardWidth = wrapperRef.current.offsetWidth / cardsToShow;
+        setCardWidth(newCardWidth);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    handleResize(); // Initial calculation
+
+    return () => window.removeEventListener('resize', handleResize);
+  }, [cardsToShow]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -65,11 +91,10 @@ const FeatureCarousel: React.FC = () => {
     return () => clearInterval(interval);
   }, [isPaused, features.length]);
 
-  useEffect(() => {
-    if (carouselRef.current) {
-      carouselRef.current.style.transform = `translateX(-${currentIndex * (100 / 3)}%)`;
-    }
-  }, [currentIndex]);
+  const getTransformValue = () => {
+    if (cardsToShow >= features.length) return 0;
+    return -currentIndex * cardWidth;
+  };
 
   return (
     <div className="feature-carousel-container">
@@ -85,17 +110,23 @@ const FeatureCarousel: React.FC = () => {
 
       <div 
         className="feature-carousel-wrapper"
+        ref={wrapperRef}
         onMouseEnter={() => setIsPaused(true)}
         onMouseLeave={() => setIsPaused(false)}
       >
         <div 
           ref={carouselRef}
           className="feature-carousel"
+          style={{
+            transform: `translateX(${getTransformValue()}px)`,
+            width: `${features.length * cardWidth}px`
+          }}
         >
-          {duplicatedFeatures.map((feature, index) => (
+          {features.map((feature, index) => (
             <motion.div 
               key={index}
               className="feature-card"
+              style={{ width: `${cardWidth - 32}px` }} // Subtracting gap
               whileHover={{ scale: 1.03 }}
               transition={{ type: "spring", stiffness: 400, damping: 10 }}
             >
@@ -182,13 +213,12 @@ const FeatureCarousel: React.FC = () => {
         .feature-carousel {
           display: flex;
           transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
-          width: ${duplicatedFeatures.length * (100 / 3)}%;
           gap: 2rem;
           padding: 0 1rem;
         }
 
         .feature-card {
-          flex: 0 0 calc(33.333% - 1.5rem);
+          flex-shrink: 0;
           background: rgba(255, 255, 255, 0.05);
           border-radius: 16px;
           overflow: hidden;
@@ -196,6 +226,7 @@ const FeatureCarousel: React.FC = () => {
           border: 1px solid rgba(255, 255, 255, 0.1);
           transition: all 0.3s ease;
           box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+          margin-right: 1rem;
         }
 
         .feature-image-container {
@@ -269,11 +300,8 @@ const FeatureCarousel: React.FC = () => {
         }
 
         @media (max-width: 1024px) {
-          .feature-carousel {
-            width: ${duplicatedFeatures.length * 50}%;
-          }
-          .feature-card {
-            flex: 0 0 calc(50% - 1.5rem);
+          .feature-carousel-header h2 {
+            font-size: 2.25rem;
           }
         }
 
@@ -282,29 +310,22 @@ const FeatureCarousel: React.FC = () => {
             padding: 4rem 1rem;
           }
           
-          .feature-carousel {
-            width: ${duplicatedFeatures.length * 100}%;
-          }
-          .feature-card {
-            flex: 0 0 calc(100% - 1.5rem);
-          }
-          
           .feature-carousel-header h2 {
-            font-size: 2.25rem;
+            font-size: 2rem;
           }
           
           .feature-carousel-header p {
             font-size: 1.1rem;
+          }
+
+          .feature-image-container {
+            height: 200px;
           }
         }
 
         @media (max-width: 480px) {
           .feature-carousel-header h2 {
             font-size: 1.75rem;
-          }
-          
-          .feature-image-container {
-            height: 200px;
           }
           
           .feature-content {
