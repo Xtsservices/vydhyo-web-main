@@ -7,7 +7,7 @@ import Image from 'next/image';
 const LtrRtlTemplates = () => {
   // External image URLs
   const images = {
-    ltr: 'https://images.unsplash.com/photo-1581093450021-4a7360e9a7d0',
+    ltr: 'https://images.unsplash.com/photo-1581094271901-8022df4466f9',
     rtl: 'https://images.unsplash.com/photo-1581094271901-8022df4466f9',
     icon: 'https://cdn-icons-png.flaticon.com/512/2965/2965300.png'
   };

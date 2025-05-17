@@ -1,5 +1,5 @@
 'use client';
-import React from 'react';
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 import Image from 'next/image';
@@ -87,23 +87,16 @@ const PageWrapper = styled.div`
   width: 100%;
   overflow-x: hidden;
   padding: 3rem 0;
-`;
+`
 
-const TopBar = styled(motion.div).attrs({
-  initial: { opacity: 0, y: -20 },
-  animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.5 }
-})`
+const TopBar = styled(motion.div)`
   width: 100%;
   display: flex;
   justify-content: center;
   margin-bottom: 1.5rem;
-`;
+`
 
-const DemoPagesBtn = styled(motion.button).attrs({
-  whileHover: { scale: 1.05 },
-  whileTap: { scale: 0.95 }
-})`
+const DemoPagesBtn = styled(motion.button)`
   background: #ffffff;
   color: #4f46e5;
   border: 1px solid #c7d2fe;
@@ -123,13 +116,9 @@ const DemoPagesBtn = styled(motion.button).attrs({
     color: white;
     box-shadow: 0 6px 12px rgba(79, 70, 229, 0.15);
   }
-`;
+`
 
-const MainTitle = styled(motion.h1).attrs({
-  initial: { opacity: 0, y: 20 },
-  animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.5, delay: 0.2 }
-})`
+const MainTitle = styled(motion.h1)`
   text-align: center;
   font-size: 2.5rem;
   font-weight: 800;
@@ -138,40 +127,30 @@ const MainTitle = styled(motion.h1).attrs({
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-`;
+`
 
-const SubTitle = styled(motion.p).attrs({
-  initial: { opacity: 0 },
-  animate: { opacity: 1 },
-  transition: { duration: 0.5, delay: 0.4 }
-})`
+const SubTitle = styled(motion.p)`
   text-align: center;
   font-size: 1.125rem;
   color: #64748b;
   max-width: 700px;
   margin: 0 auto 3rem;
   line-height: 1.6;
-`;
+`
 
 const GalleryContainer = styled.div`
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 1.5rem 4rem;
-`;
+`
 
 const GalleryGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 2rem;
-`;
+`
 
-const GalleryCard = styled(motion.div).attrs({
-  initial: { opacity: 0, y: 50 },
-  whileInView: { opacity: 1, y: 0 },
-  viewport: { once: true },
-  transition: { duration: 0.5 },
-  whileHover: { scale: 1.02 }
-})`
+const GalleryCard = styled(motion.div)`
   background: #ffffff;
   border-radius: 12px;
   border: 1px solid #e0e7ff;
@@ -181,7 +160,12 @@ const GalleryCard = styled(motion.div).attrs({
   display: flex;
   flex-direction: column;
   position: relative;
-`;
+  
+  &:hover {
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    transform: translateY(-5px);
+  }
+`
 
 const CategoryBadge = styled.span`
   position: absolute;
@@ -195,7 +179,7 @@ const CategoryBadge = styled.span`
   font-weight: 600;
   z-index: 2;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-`;
+`
 
 const ImageContainer = styled.div`
   position: relative;
@@ -203,33 +187,33 @@ const ImageContainer = styled.div`
   height: 200px;
   background: #f1f5f9;
   overflow: hidden;
-`;
+`
 
 const GalleryInfo = styled.div`
   padding: 1.25rem;
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
-`;
+`
 
 const DemoTitle = styled.h3`
   font-size: 1.125rem;
   color: #1e293b;
   font-weight: 600;
   margin: 0;
-`;
+`
 
 const DemoDescription = styled.p`
   font-size: 0.875rem;
   color: #64748b;
   margin: 0;
-`;
+`
 
 const ActionButtons = styled.div`
   display: flex;
   gap: 0.75rem;
   margin-top: 0.5rem;
-`;
+`
 
 const DemoBtn = styled(motion.a).withConfig({
   shouldForwardProp: (prop) => !['$primary'].includes(prop),
@@ -249,22 +233,47 @@ const DemoBtn = styled(motion.a).withConfig({
   &:hover {
     background: ${({ $primary }) => ($primary ? '#4338ca' : '#e0e7ff')};
   }
-`;
+`
 
 const MultiTemplateLayout = () => {
+  const [isMounted, setIsMounted] = useState(false)
+
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
+
+  if (!isMounted) {
+    return null
+  }
+
   return (
     <PageWrapper>
-      <TopBar>
-        <DemoPagesBtn>
+      <TopBar
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <DemoPagesBtn
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+        >
           <span>✨</span> Vydhyo Demo Pages
         </DemoPagesBtn>
       </TopBar>
 
-      <MainTitle>
+      <MainTitle
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: 0.2 }}
+      >
         Vydhyo Healthcare Templates
       </MainTitle>
 
-      <SubTitle>
+      <SubTitle
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5, delay: 0.4 }}
+      >
         Discover our comprehensive suite of templates designed specifically for modern healthcare practices
       </SubTitle>
 
@@ -273,16 +282,20 @@ const MultiTemplateLayout = () => {
           {demoData.map((demo, index) => (
             <GalleryCard
               key={index}
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
+              viewport={{ once: true }}
+              whileHover={{ scale: 1.02 }}
             >
               <CategoryBadge>{demo.category}</CategoryBadge>
               <ImageContainer>
                 <Image
                   src={demo.image}
                   alt={demo.title}
-                  width={300}
-                  height={200}
+                  fill
                   style={{ objectFit: 'cover' }}
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   priority={index < 3}
                 />
               </ImageContainer>
@@ -312,7 +325,7 @@ const MultiTemplateLayout = () => {
         </GalleryGrid>
       </GalleryContainer>
     </PageWrapper>
-  );
-};
+  )
+}
 
-export default MultiTemplateLayout;
+export default MultiTemplateLayout
