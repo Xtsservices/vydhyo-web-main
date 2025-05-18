@@ -45,7 +45,7 @@ const Header = () => {
           alt="Vydhyo"
           style={{
             ...logoImageStyle,
-            height: isMobile ? "90px" : "120px",
+            height: isMobile ? "100px" : "120px",
           }}
         />
       </div>
@@ -207,7 +207,7 @@ const mobileMenuButtonStyle: React.CSSProperties = {
   flexDirection: "column",
   justifyContent: "space-between",
   width: "30px",
-  height: "21px",
+  height: "27px",
   cursor: "pointer",
   zIndex: 1001,
 };
