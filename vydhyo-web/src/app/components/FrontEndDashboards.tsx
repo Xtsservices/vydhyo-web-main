@@ -1,282 +1,323 @@
 'use client';
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
 import Image from 'next/image';
+
+const doctorPages = [
+  { 
+    title: 'Doctor Dashboard', 
+    img: 'https://images.unsplash.com/photo-1581094271901-8022df4466f9?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
+    description: 'Comprehensive overview of your practice'
+  },
+  { 
+    title: 'Patient Management', 
+    img: 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
+    description: 'Manage all patient records and history'
+  },
+  { 
+    title: 'E-Prescriptions', 
+    img: 'https://images.unsplash.com/photo-1581094271901-8022df4466f9?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
+    description: 'Digital prescription management system'
+  },
+  { 
+    title: 'Appointment Scheduler', 
+    img: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
+    description: 'Manage your availability and bookings'
+  }
+];
+
+const patientPages = [
+  { 
+    title: 'Patient Dashboard', 
+    img: 'https://images.unsplash.com/photo-1465101046530-73398c7f28ca?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
+    description: 'Personal health overview and insights'
+  },
+  { 
+    title: 'My Appointments', 
+    img: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
+    description: 'View and manage your appointments'
+  },
+  { 
+    title: 'E-Prescriptions', 
+    img: 'https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
+    description: 'Access your digital prescriptions'
+  },
+  { 
+    title: 'Health Records', 
+    img: 'https://images.unsplash.com/photo-1465101046530-73398c7f28ca?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
+    description: 'View and download your health records'
+  }
+];
 
 const FrontEndDashboards: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'Doctors' | 'Patients'>('Doctors');
-
-  const doctorPages = [
-    { 
-      title: 'Doctor Dashboard', 
-      img: 'https://images.unsplash.com/photo-1581094271901-8022df4466f9?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
-      description: 'Comprehensive overview of your practice'
-    },
-    { 
-      title: 'Patient Management', 
-      img: 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
-      description: 'Manage all patient records and history'
-    },
-    { 
-      title: 'E-Prescriptions', 
-      img: 'https://images.unsplash.com/photo-1581094271901-8022df4466f9?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
-      description: 'Digital prescription management system'
-    },
-    { 
-      title: 'Appointment Scheduler', 
-      img: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
-      description: 'Manage your availability and bookings'
-    }
-  ];
-
-  const patientPages = [
-    { 
-      title: 'Patient Dashboard', 
-      img: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
-      description: 'Your health overview in one place'
-    },
-    { 
-      title: 'Medical Records', 
-      img: 'https://images.unsplash.com/photo-1581094271901-8022df4466f9?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
-      description: 'Access your complete medical history'
-    },
-    { 
-      title: 'Book Appointment', 
-      img: 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
-      description: 'Schedule visits with your doctors'
-    },
-    { 
-      title: 'Telemedicine', 
-      img: 'https://images.unsplash.com/photo-1581093450021-4a7360e9a7d0?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
-      description: 'Virtual consultations from home'
-    }
-  ];
-
+  const [isFlipping, setIsFlipping] = useState(false);
   const currentPages = activeTab === 'Doctors' ? doctorPages : patientPages;
 
+  const handleTabChange = (tab: 'Doctors' | 'Patients') => {
+    if (tab !== activeTab) {
+      setIsFlipping(true);
+      setTimeout(() => {
+        setActiveTab(tab);
+        setIsFlipping(false);
+      }, 300); // Match this duration with the CSS transition duration
+    }
+  };
+
   return (
-    <div className="dashboard-section">
-      {/* Badge with animation */}
-      <motion.div 
-        className="badge"
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-      > 
-        <svg width="18" height="18" fill="none" viewBox="0 0 24 24">
-          <rect x="3" y="4" width="18" height="16" rx="2" stroke="#3b82f6" strokeWidth="2" />
-          <path d="M3 10h18" stroke="#3b82f6" strokeWidth="2" />
-        </svg>
-        <span>Vydhyo Healthcare Dashboards</span>
-      </motion.div>
-
-      {/* Animated Heading */}
-      <motion.h1 
-        className="section-title"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5, delay: 0.2 }}
-      >
-        Transform Your <strong>Medical Practice</strong> with Vydhyo
-      </motion.h1>
-
-      {/* Animated Tabs */}
-      <motion.div 
-        className="tabs"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.5, delay: 0.4 }}
-      >
-        {['Doctors', 'Patients'].map((tab) => (
-          <motion.button
-            key={tab}
-            className={`tab ${activeTab === tab ? 'active' : ''}`}
-            onClick={() => setActiveTab(tab as 'Doctors' | 'Patients')}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-          >
-            {tab === 'Doctors' ? (
-              <svg width="24" height="24" fill="none" viewBox="0 0 24 24">
-                <circle cx="12" cy="7" r="4" stroke="currentColor" strokeWidth="2" />
-                <path d="M4 21v-2a4 4 0 014-4h8a4 4 0 014 4v2" stroke="currentColor" strokeWidth="2" />
-              </svg>
-            ) : (
-              <svg width="24" height="24" fill="none" viewBox="0 0 24 24">
-                <circle cx="12" cy="8" r="4" stroke="currentColor" strokeWidth="2" />
-                <path d="M6 21v-2a6 6 0 0112 0v2" stroke="currentColor" strokeWidth="2" />
-              </svg>
-            )}
-            <span>{tab}</span>
-          </motion.button>
-        ))}
-      </motion.div>
-
-      {/* Animated Cards */}
-      <div className="cards">
+    <div className="admin-core-section">
+      <h1 className="admin-core-title">
+        Awesome Structured Admin Core Pages
+      </h1>
+      <div className="admin-core-tabs">
+        <button
+          className={`admin-core-tab${activeTab === 'Doctors' ? ' active' : ''}`}
+          onClick={() => handleTabChange('Doctors')}
+        >
+          <span className="tab-icon">
+            <svg width="24" height="24" fill="none" viewBox="0 0 24 24">
+              <circle cx="12" cy="7" r="4" stroke="currentColor" strokeWidth="2" />
+              <path d="M4 21v-2a4 4 0 014-4h8a4 4 0 014 4v2" stroke="currentColor" strokeWidth="2" />
+            </svg>
+          </span>
+          Doctors
+        </button>
+        <button
+          className={`admin-core-tab${activeTab === 'Patients' ? ' active' : ''}`}
+          onClick={() => handleTabChange('Patients')}
+        >
+          <span className="tab-icon">
+            <svg width="24" height="24" fill="none" viewBox="0 0 24 24">
+              <circle cx="12" cy="8" r="4" stroke="currentColor" strokeWidth="2" />
+              <path d="M6 21v-2a6 6 0 0112 0v2" stroke="currentColor" strokeWidth="2" />
+            </svg>
+          </span>
+          Patients
+        </button>
+      </div>
+      <div className={`admin-core-cards ${isFlipping ? 'flipping' : ''}`}>
         {currentPages.map((page, idx) => (
-          <motion.div 
-            key={idx}
-            className="card"
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: idx * 0.1 }}
-            viewport={{ once: true }}
-            whileHover={{ scale: 1.05 }}
-          >
-            <div className="image-container">
-              <Image
-                src={page.img}
-                alt={page.title}
-                fill
-                style={{ objectFit: 'cover' }}
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-              />
+          <div className="admin-core-card" key={idx}>
+            <div className="admin-core-card-inner">
+              <div className="admin-core-card-front">
+                <div className="admin-core-card-img">
+                  <Image
+                    src={page.img}
+                    alt={page.title}
+                    fill
+                    style={{ objectFit: 'cover' }}
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  />
+                </div>
+                <div className="admin-core-card-content">
+                  <div className="admin-core-card-title">{page.title}</div>
+                  <div className="admin-core-card-description">{page.description}</div>
+                </div>
+              </div>
+              <div className="admin-core-card-back">
+                <div className="admin-core-card-back-content">
+                  <div className="admin-core-card-back-title">{page.title}</div>
+                  <div className="admin-core-card-back-description">{page.description}</div>
+                  <button className="admin-core-card-button">Explore</button>
+                </div>
+              </div>
             </div>
-            <h3>{page.title}</h3>
-            <p>{page.description}</p>
-          </motion.div>
+          </div>
         ))}
       </div>
-
-      {/* Animated Button */}
-      <motion.button 
-        className="cta-button"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.5, delay: 0.6 }}
-        whileHover={{ scale: 1.05 }}
-        whileTap={{ scale: 0.95 }}
-      >
-        Explore All Vydhyo Features
-        <svg width="20" height="20" fill="none" viewBox="0 0 24 24">
-          <path d="M9 18l6-6-6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
-      </motion.button>
-
-      {/* Custom CSS */}
+      <button className="admin-core-cta">
+        View Clinic Admin Pages
+        <span>
+          <svg width="20" height="20" fill="none" viewBox="0 0 24 24">
+            <path d="M9 18l6-6-6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+        </span>
+      </button>
       <style jsx>{`
-        .dashboard-section {
-          background: linear-gradient(to right, #f0f9ff, #e0f2fe);
+        .admin-core-section {
+          background: #fff;
           min-height: 100vh;
-          padding: 4rem 1rem;
+          padding: 3rem 2rem 2rem;
           text-align: center;
-          overflow-x: hidden;
         }
-
-        .badge {
-          display: inline-flex;
-          align-items: center;
-          gap: 0.5rem;
-          background: white;
-          padding: 0.75rem 1.5rem;
-          border-radius: 9999px;
-          border: 1px solid #bfdbfe;
-          color: #3b82f6;
-          font-weight: 600;
-          box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-          font-size: 1rem;
-        }
-
-        .section-title {
+        .admin-core-title {
           font-size: 2.5rem;
           font-weight: 700;
-          color: #1e40af;
-          margin: 2rem 0 1.5rem;
-          line-height: 1.3;
+          color: #1e293b;
+          margin-bottom: 2.5rem;
         }
-
-        .section-title strong {
-          background: linear-gradient(90deg, #3b82f6, #10b981);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-        }
-
-        .tabs {
+        .admin-core-tabs {
           display: flex;
           justify-content: center;
-          gap: 1.5rem;
-          margin-bottom: 3rem;
+          gap: 2rem;
+          margin-bottom: 2.5rem;
         }
-
-        .tab {
-          background: white;
-          padding: 1.25rem 2.5rem;
-          border-radius: 1rem;
+        .admin-core-tab {
+          background: #fff;
+          border: 3px solid #e0e7ef;
+          color: #1e293b;
+          border-radius: 1.25rem;
+          font-size: 1.25rem;
           font-weight: 600;
-          border: 2px solid #e0f2fe;
-          color: #1e40af;
+          padding: 1.5rem 3rem;
+          box-shadow: 0 2px 8px rgba(30, 41, 59, 0.06);
           display: flex;
           align-items: center;
           gap: 0.75rem;
-          transition: all 0.3s ease;
-          font-size: 1.1rem;
           cursor: pointer;
+          transition: all 0.2s;
         }
-
-        .tab.active {
+        .admin-core-tab.active {
           background: #3b82f6;
-          color: white;
+          color: #fff;
           border-color: #3b82f6;
-          box-shadow: 0 4px 15px rgba(59, 130, 246, 0.2);
+          box-shadow: 0 4px 16px rgba(59, 130, 246, 0.15);
         }
-
-        .cards {
+        .tab-icon {
           display: flex;
-          flex-wrap: wrap;
-          justify-content: center;
+          align-items: center;
+        }
+        .admin-core-cards {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
           gap: 2rem;
-          margin: 2rem auto;
-          max-width: 1200px;
+          margin: 0 auto 2.5rem;
+          max-width: 1400px;
+          perspective: 1000px;
         }
-
-        .card {
-          background: white;
-          border-radius: 1.5rem;
-          box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
-          padding: 1.5rem;
-          width: 280px;
-          transition: all 0.3s ease;
-          text-align: left;
+        .admin-core-cards.flipping .admin-core-card-inner {
+          transform: rotateY(180deg);
         }
-
-        .image-container {
+        .admin-core-card {
+          background: transparent;
+          perspective: 1000px;
+          height: 380px;
+        }
+        .admin-core-card-inner {
           position: relative;
           width: 100%;
-          height: 180px;
-          border-radius: 1rem;
-          overflow: hidden;
-          margin-bottom: 1.5rem;
-          background: #f8fafc;
+          height: 100%;
+          transition: transform 0.6s;
+          transform-style: preserve-3d;
+          box-shadow: 0 8px 32px rgba(30, 41, 59, 0.08);
+          border-radius: 1.5rem;
         }
-
-        .card h3 {
+        .admin-core-card-front,
+        .admin-core-card-back {
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          backface-visibility: hidden;
+          border-radius: 1.5rem;
+          overflow: hidden;
+        }
+        .admin-core-card-front {
+          background: #fff;
+          display: flex;
+          flex-direction: column;
+        }
+        .admin-core-card-back {
+          background: #3b82f6;
+          color: white;
+          transform: rotateY(180deg);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+        .admin-core-card-img {
+          position: relative;
+          width: 100%;
+          height: 220px;
+          overflow: hidden;
+          background: #f1f5f9;
+        }
+        .admin-core-card-content {
+          padding: 1.5rem;
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+        }
+        .admin-core-card-title {
+          font-size: 1.5rem;
           font-weight: 700;
-          font-size: 1.25rem;
-          color: #1e40af;
+          color: #1e293b;
           margin-bottom: 0.5rem;
         }
-
-        .card p {
+        .admin-core-card-description {
+          font-size: 1rem;
           color: #64748b;
-          font-size: 0.95rem;
-          line-height: 1.5;
         }
-
-        .cta-button {
-          background: linear-gradient(to right, #3b82f6, #10b981);
-          color: white;
+        .admin-core-card-back-content {
+          padding: 2rem;
+          text-align: center;
+        }
+        .admin-core-card-back-title {
+          font-size: 1.5rem;
+          font-weight: 700;
+          margin-bottom: 1rem;
+        }
+        .admin-core-card-back-description {
+          font-size: 1rem;
+          margin-bottom: 1.5rem;
+          opacity: 0.9;
+        }
+        .admin-core-card-button {
+          background: white;
+          color: #3b82f6;
+          border: none;
+          padding: 0.75rem 1.5rem;
+          border-radius: 9999px;
           font-weight: 600;
-          padding: 1rem 2.5rem;
+          cursor: pointer;
+          transition: all 0.2s;
+        }
+        .admin-core-card-button:hover {
+          background: #f8fafc;
+          transform: translateY(-2px);
+        }
+        .admin-core-cta {
+          background: #2563eb;
+          color: #fff;
+          font-weight: 600;
+          padding: 1.25rem 2.5rem;
           border-radius: 9999px;
           display: inline-flex;
           align-items: center;
           gap: 0.5rem;
-          margin-top: 3rem;
-          transition: all 0.3s ease;
-          box-shadow: 0 8px 20px rgba(59, 130, 246, 0.2);
+          font-size: 1.15rem;
           border: none;
-          font-size: 1.1rem;
+          margin-top: 1.5rem;
+          box-shadow: 0 8px 24px rgba(37, 99, 235, 0.13);
           cursor: pointer;
+          transition: background 0.2s;
+        }
+        .admin-core-cta:hover {
+          background: #1d4ed8;
+        }
+        @media (max-width: 1200px) {
+          .admin-core-cards {
+            grid-template-columns: repeat(2, 1fr);
+            max-width: 800px;
+          }
+        }
+        @media (max-width: 768px) {
+          .admin-core-cards {
+            grid-template-columns: 1fr;
+            max-width: 400px;
+          }
+          .admin-core-title {
+            font-size: 2rem;
+          }
+          .admin-core-tabs {
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+          }
+          .admin-core-tab {
+            width: 100%;
+            max-width: 300px;
+            padding: 1rem 1.5rem;
+          }
         }
       `}</style>
     </div>
