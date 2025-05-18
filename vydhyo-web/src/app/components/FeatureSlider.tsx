@@ -1,5 +1,5 @@
 'use client';
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 
@@ -47,6 +47,42 @@ const FeatureCarousel: React.FC = () => {
       description: "Personalized health plans for chronic condition management",
       image: "https://images.unsplash.com/photo-1581094271901-8022df4466f9?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&h=400&q=80",
       icon: "❤️"
+    },
+    {
+      title: "Telemedicine",
+      description: "Virtual consultations from the comfort of your home",
+      image: "https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&h=400&q=80",
+      icon: "📱"
+    },
+    {
+      title: "Lab Tests",
+      description: "Schedule and view results of diagnostic tests",
+      image: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&h=400&q=80",
+      icon: "🧪"
+    },
+    {
+      title: "Medication Tracker",
+      description: "Never miss a dose with our smart reminders",
+      image: "https://images.unsplash.com/photo-1581094271901-8022df4466f9?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&h=400&q=80",
+      icon: "⏰"
+    },
+    {
+      title: "Family Health",
+      description: "Manage healthcare for your entire family in one place",
+      image: "https://images.unsplash.com/photo-1579684385127-1ef15d508118?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&h=400&q=80",
+      icon: "👪"
+    },
+    {
+      title: "Health Insurance",
+      description: "Compare and manage your health coverage options",
+      image: "https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&h=400&q=80",
+      icon: "🛡️"
+    },
+    {
+      title: "Fitness Tracking",
+      description: "Connect wearables and track your health metrics",
+      image: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&h=400&q=80",
+      icon: "🏃‍♂️"
     }
   ];
 
@@ -57,6 +93,14 @@ const FeatureCarousel: React.FC = () => {
   const animationRef = useRef<number>(0);
   const lastUpdateTime = useRef<number>(0);
   const progress = useRef<number>(0);
+  const [cardsToShow, setCardsToShow] = useState(3);
+  const [cardWidth, setCardWidth] = useState(0);
+  const [clonedFeatures, setClonedFeatures] = useState<FeatureCard[]>([]);
+
+  // Clone features to create seamless looping
+  useEffect(() => {
+    setClonedFeatures([...features, ...features]);
+  }, []);
 
   const getCardsToShow = () => {
     if (!wrapperRef.current) return 3;
@@ -65,9 +109,6 @@ const FeatureCarousel: React.FC = () => {
     if (width < 1024) return 2;
     return 3;
   };
-
-  const [cardsToShow, setCardsToShow] = useState(3);
-  const [cardWidth, setCardWidth] = useState(0);
 
   const updateLayout = () => {
     if (!wrapperRef.current) return;
@@ -82,7 +123,7 @@ const FeatureCarousel: React.FC = () => {
   };
 
   // Initialize and handle resize
-  React.useLayoutEffect(() => {
+  useEffect(() => {
     updateLayout();
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
@@ -97,7 +138,11 @@ const FeatureCarousel: React.FC = () => {
       progress.current += delta / 3000; // 3 seconds per slide
       if (progress.current >= 1) {
         progress.current = 0;
-        setCurrentIndex(prev => (prev + 1) % features.length);
+        setCurrentIndex(prev => {
+          // When we reach the end of the original array, reset to 0 seamlessly
+          if (prev >= features.length - 1) return 0;
+          return prev + 1;
+        });
       }
     }
 
@@ -109,7 +154,7 @@ const FeatureCarousel: React.FC = () => {
     animationRef.current = requestAnimationFrame(animate);
   };
 
-  React.useLayoutEffect(() => {
+  useEffect(() => {
     animationRef.current = requestAnimationFrame(animate);
     return () => {
       if (animationRef.current) cancelAnimationFrame(animationRef.current);
@@ -138,12 +183,12 @@ const FeatureCarousel: React.FC = () => {
           ref={carouselRef}
           className="feature-carousel"
           style={{
-            width: `${features.length * cardWidth}px`
+            width: `${clonedFeatures.length * cardWidth}px`
           }}
         >
-          {features.map((feature, index) => (
+          {clonedFeatures.map((feature, index) => (
             <motion.div 
-              key={index}
+              key={`${index}-${feature.title}`}
               className="feature-card"
               style={{ width: `${cardWidth - 32}px` }}
               whileHover={{ scale: 1.03 }}
@@ -156,7 +201,7 @@ const FeatureCarousel: React.FC = () => {
                   width={600}
                   height={400}
                   className="feature-image"
-                  priority={index < 3}
+                  priority={index < 6} // Only prioritize first few images
                 />
                 <div className="feature-icon">{feature.icon}</div>
               </div>
@@ -178,7 +223,7 @@ const FeatureCarousel: React.FC = () => {
         {features.map((_, index) => (
           <motion.button
             key={index}
-            className={`indicator ${index === currentIndex ? 'active' : ''}`}
+            className={`indicator ${index === currentIndex % features.length ? 'active' : ''}`}
             onClick={() => {
               setCurrentIndex(index);
               progress.current = 0;
@@ -236,6 +281,7 @@ const FeatureCarousel: React.FC = () => {
           display: flex;
           transition: transform 0.7s ease-out;
           gap: 2rem;
+          will-change: transform;
         }
 
         .feature-card {
