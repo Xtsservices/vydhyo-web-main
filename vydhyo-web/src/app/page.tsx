@@ -17,24 +17,26 @@ import Footer from "./components/Footer";
 
 export default function Home() {
   return (
-   <>
+   <div style={{ overflowX: 'hidden', width: '100%' }}>
     <Header/>
     <IndexPage/>
-    <FeaturePills />
-    <LtrRtlTemplates />
-    <ChooseUsSection />
-    <MultiTemplateLayout />
-    <FeaturePills />
-    <FrontEndDashboards/>
-    <FeatureSlider />
-    <KeyFeatures />
-    <AdminDashboard />
-    <Unleash />
-    <CustomerStories />
-    <Pricing />
-    <FeaturesAtGlance />
-    <QandA />
+    <div style={{ maxWidth: '100vw', overflowX: 'hidden' }}>
+      <FeaturePills />
+      <LtrRtlTemplates />
+      <ChooseUsSection />
+      <MultiTemplateLayout />
+      <FeaturePills />
+      <FrontEndDashboards/>
+      <FeatureSlider />
+      <KeyFeatures />
+      <AdminDashboard />
+      <Unleash />
+      <CustomerStories />
+      <Pricing />
+      <FeaturesAtGlance />
+      <QandA />
+    </div>
     <Footer />
-   </>
+   </div>
   );
 }

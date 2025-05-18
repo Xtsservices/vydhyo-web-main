@@ -1,4 +1,4 @@
-"use client"; // Add this at the very top
+"use client";
 
 import React, { useState } from "react";
 
@@ -39,8 +39,22 @@ const QandA: React.FC = () => {
     const [openIndex, setOpenIndex] = useState<number | null>(null);
 
     return (
-        <div style={{ background: "#fff", minHeight: "100vh", paddingBottom: 60 }}>
-            <div style={{ textAlign: "center", marginTop: 40 }}>
+        <div style={{ 
+            background: "#fff", 
+            minHeight: "100vh", 
+            padding: "20px", 
+            boxSizing: "border-box",
+            width: "100%",
+            overflowX: "hidden"
+        }}>
+            <div style={{ 
+                textAlign: "center", 
+                marginTop: 40,
+                maxWidth: 1200,
+                marginLeft: "auto",
+                marginRight: "auto",
+                padding: "0 20px"
+            }}>
                 <button
                     style={{
                         background: "#f4f6ff",
@@ -51,10 +65,11 @@ const QandA: React.FC = () => {
                         fontWeight: 600,
                         fontSize: 16,
                         marginBottom: 16,
-                        display: "flex",
+                        display: "inline-flex",
                         alignItems: "center",
                         gap: 8,
                         cursor: "pointer",
+                        margin: "0 auto"
                     }}
                 >
                     <span
@@ -88,9 +103,10 @@ const QandA: React.FC = () => {
                 <h2
                     style={{
                         fontWeight: 700,
-                        fontSize: 22,
+                        fontSize: "clamp(1.5rem, 5vw, 2.2rem)",
                         marginBottom: 32,
                         color: "#222",
+                        lineHeight: 1.3
                     }}
                 >
                     Your Questions are Answered
@@ -103,6 +119,9 @@ const QandA: React.FC = () => {
                     display: "flex",
                     flexDirection: "column",
                     gap: 12,
+                    padding: "0 20px",
+                    width: "100%",
+                    boxSizing: "border-box"
                 }}
             >
                 {faqData.map((item, idx) => (
@@ -114,6 +133,7 @@ const QandA: React.FC = () => {
                             boxShadow: "0 1px 4px rgba(0,0,0,0.04)",
                             border: "1px solid #e8eaf1",
                             overflow: "hidden",
+                            width: "100%"
                         }}
                     >
                         <button
@@ -124,8 +144,8 @@ const QandA: React.FC = () => {
                                 background: "none",
                                 border: "none",
                                 outline: "none",
-                                padding: "18px 24px",
-                                fontSize: 16,
+                                padding: "18px 20px",
+                                fontSize: "clamp(14px, 3vw, 16px)",
                                 fontWeight: 600,
                                 color: "#222",
                                 display: "flex",
@@ -149,6 +169,7 @@ const QandA: React.FC = () => {
                                     marginRight: 8,
                                     transition: "transform 0.2s",
                                     transform: openIndex === idx ? "rotate(45deg)" : "rotate(0deg)",
+                                    flexShrink: 0
                                 }}
                             >
                                 +
@@ -158,9 +179,9 @@ const QandA: React.FC = () => {
                         {openIndex === idx && (
                             <div
                                 style={{
-                                    padding: "0 24px 18px 54px",
+                                    padding: "0 20px 18px 54px",
                                     color: "#555",
-                                    fontSize: 15,
+                                    fontSize: "clamp(14px, 3vw, 15px)",
                                     lineHeight: 1.7,
                                     background: "#f9faff",
                                     borderTop: "1px solid #e8eaf1",
@@ -180,15 +201,16 @@ const QandA: React.FC = () => {
                     background: "#0a1a3c",
                     borderRadius: 12,
                     maxWidth: 900,
-                    marginLeft: "auto",
-                    marginRight: "auto",
-                    padding: "36px 32px 32px 32px",
+                    margin: "40px auto 0 auto",
+                    padding: "36px 32px",
                     position: "relative",
                     overflow: "hidden",
                     minHeight: 180,
                     display: "flex",
                     alignItems: "center",
                     gap: 32,
+                    width: "calc(100% - 40px)",
+                    boxSizing: "border-box"
                 }}
             >
                 <div style={{ flex: 1, zIndex: 2 }}>
@@ -196,21 +218,27 @@ const QandA: React.FC = () => {
                         style={{
                             color: "#fff",
                             fontWeight: 700,
-                            fontSize: 22,
+                            fontSize: "clamp(18px, 4vw, 22px)",
                             marginBottom: 8,
                         }}
                     >
                         Need a customized application for your business?
                     </h3>
-                    <p style={{ color: "#e3e8ff", fontSize: 15, marginBottom: 24 }}>
+                    <p style={{ 
+                        color: "#e3e8ff", 
+                        fontSize: "clamp(14px, 3vw, 15px)", 
+                        marginBottom: 24 
+                    }}>
                         We are happy to customize your products based on your needs. Please send us a note
                     </p>
                     <form
                         style={{
                             display: "flex",
+                            flexDirection: "row",
                             alignItems: "center",
                             gap: 8,
                             maxWidth: 400,
+                            width: "100%"
                         }}
                         onSubmit={e => e.preventDefault()}
                     >
@@ -226,6 +254,7 @@ const QandA: React.FC = () => {
                                 fontSize: 15,
                                 background: "#fff",
                                 color: "#222",
+                                minWidth: 0
                             }}
                             required
                         />
@@ -240,13 +269,14 @@ const QandA: React.FC = () => {
                                 fontWeight: 600,
                                 fontSize: 15,
                                 cursor: "pointer",
+                                whiteSpace: "nowrap"
                             }}
                         >
                             Subscribe
                         </button>
                     </form>
                 </div>
-                {/* Decorative images */}
+                {/* Decorative images - Hidden on mobile */}
                 <div
                     style={{
                         position: "absolute",
@@ -258,7 +288,7 @@ const QandA: React.FC = () => {
                         pointerEvents: "none",
                         display: "flex",
                         alignItems: "center",
-                        justifyContent: "flex-end",
+                        justifyContent: "flex-end"
                     }}
                 >
                     {/* Placeholder for images */}
@@ -276,32 +306,33 @@ const QandA: React.FC = () => {
                 </div>
             </div>
             {/* FadeIn animation */}
-            <style>
-                {`
-                    @keyframes fadeIn {
-                        from { opacity: 0; transform: translateY(-8px);}
-                        to { opacity: 1; transform: translateY(0);}
+            <style jsx>{`
+                @keyframes fadeIn {
+                    from { opacity: 0; transform: translateY(-8px);}
+                    to { opacity: 1; transform: translateY(0);}
+                }
+                @media (max-width: 768px) {
+                    form {
+                        flex-direction: column !important;
+                        align-items: stretch !important;
                     }
-                    @media (max-width: 900px) {
-                        div[style*="display: flex"][style*="align-items: center"][style*="gap: 32px"] {
-                            flex-direction: column !important;
-                            padding: 32px 12px 32px 12px !important;
-                            min-height: 320px !important;
-                        }
-                        div[style*="position: absolute"][style*="right: 0"] {
-                            position: static !important;
-                            width: 100% !important;
-                            margin-top: 24px !important;
-                            display: flex !important;
-                            justify-content: center !important;
-                        }
-                        img[alt="App Screens"] {
-                            width: 100% !important;
-                            max-width: 320px !important;
-                        }
+                    input {
+                        width: 100% !important;
+                        margin-bottom: 8px !important;
                     }
-                `}
-            </style>
+                    button[type="submit"] {
+                        width: 100% !important;
+                    }
+                    div[style*="position: absolute"] {
+                        display: none !important;
+                    }
+                }
+                @media (max-width: 480px) {
+                    div[style*="padding: 36px 32px"] {
+                        padding: 24px 20px !important;
+                    }
+                }
+            `}</style>
         </div>
     );
 };

@@ -57,12 +57,23 @@ const CustomerStories: React.FC = () => {
             style={{
                 background: "linear-gradient(90deg, #1e90ff 0%, #4f5bd5 100%)",
                 minHeight: "100vh",
-                padding: "0",
+                padding: "20px",
                 margin: "0",
                 fontFamily: "Segoe UI, Arial, sans-serif",
+                boxSizing: "border-box",
+                width: "100%",
+                overflowX: "hidden",
             }}
         >
-            <div style={{ padding: "40px 0 0 0", textAlign: "center" }}>
+            <div style={{ 
+                padding: "40px 0 0 0", 
+                textAlign: "center",
+                maxWidth: "1200px",
+                margin: "0 auto",
+                width: "100%",
+                paddingLeft: "20px",
+                paddingRight: "20px",
+            }}>
                 <button
                     style={{
                         background: "#fff",
@@ -78,6 +89,7 @@ const CustomerStories: React.FC = () => {
                         alignItems: "center",
                         gap: "10px",
                         cursor: "pointer",
+                        maxWidth: "100%",
                     }}
                 >
                     <span role="img" aria-label="stories">
@@ -89,23 +101,27 @@ const CustomerStories: React.FC = () => {
                     style={{
                         color: "#fff",
                         fontWeight: 700,
-                        fontSize: "2.2rem",
+                        fontSize: "clamp(1.5rem, 5vw, 2.2rem)",
                         margin: "0 0 10px 0",
                         letterSpacing: "-1px",
                         lineHeight: 1.2,
+                        padding: "0 10px",
                     }}
                 >
-                    Our Customer’s trust Vydhyo for its<br />
+                    Our Customer's trust Vydhyo for its<br />
                     reliability and efficiency.
                 </h2>
             </div>
             <div
                 style={{
                     display: "grid",
-                    gridTemplateColumns: "repeat(3, 1fr)",
-                    gap: "32px",
+                    gridTemplateColumns: "repeat(auto-fit, minmax(min(300px, 100%), 1fr))",
+                    gap: "24px",
                     margin: "40px auto 0 auto",
                     maxWidth: "1400px",
+                    padding: "0 20px",
+                    width: "100%",
+                    boxSizing: "border-box",
                 }}
             >
                 {customerStories.map((story, idx) => (
@@ -114,7 +130,7 @@ const CustomerStories: React.FC = () => {
                         style={{
                             background: "linear-gradient(90deg, rgba(79,91,213,0.95) 0%, rgba(30,144,255,0.95) 100%)",
                             borderRadius: "16px",
-                            padding: "28px 32px",
+                            padding: "24px",
                             color: "#fff",
                             width: "100%",
                             minHeight: "180px",
@@ -122,6 +138,7 @@ const CustomerStories: React.FC = () => {
                             display: "flex",
                             flexDirection: "column",
                             marginBottom: "0",
+                            boxSizing: "border-box",
                         }}
                     >
                         <div style={{ display: "flex", alignItems: "center", marginBottom: 8 }}>
@@ -136,12 +153,22 @@ const CustomerStories: React.FC = () => {
                                     justifyContent: "center",
                                     fontSize: "2rem",
                                     marginRight: 16,
+                                    flexShrink: 0,
                                 }}
                             >
                                 {story.avatar}
                             </div>
-                            <div>
-                                <div style={{ fontWeight: 700, fontSize: "1.15rem", color: "#fff" }}>{story.name}</div>
+                            <div style={{ overflow: "hidden" }}>
+                                <div style={{ 
+                                    fontWeight: 700, 
+                                    fontSize: "1.15rem", 
+                                    color: "#fff",
+                                    whiteSpace: "nowrap",
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis"
+                                }}>
+                                    {story.name}
+                                </div>
                                 <div>
                                     {Array.from({ length: story.rating }).map((_, i) => (
                                         <span key={i} style={{ color: "#ffd700", fontSize: "1.1rem", marginRight: 2 }}>★</span>

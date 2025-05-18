@@ -6,32 +6,34 @@ const nextConfig = {
       'cdn-icons-png.flaticon.com',
       'images.unsplash.com'
     ],
-    minimumCacheTTL: 3600, // Cache optimized images for 1 hour
-    formats: ['image/webp'], // Serve modern webp format when possible
-    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840], // Default device sizes
-    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384], // Default image sizes
+    minimumCacheTTL: 3600,
+    formats: ['image/webp'],
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
   },
   
   // Compiler configuration
   compiler: {
-    styledComponents: true, // Required for styled-components SSR
-    removeConsole: process.env.NODE_ENV === 'production', // Remove console.log in production
+    styledComponents: true,
+    removeConsole: process.env.NODE_ENV === 'production',
   },
   
-  // React Strict Mode (recommended)
+  // React Strict Mode
   reactStrictMode: true,
   
   // Production-only optimizations
   ...(process.env.NODE_ENV === 'production' && {
-    swcMinify: true, // Use SWC minifier (faster than Terser)
-    output: 'standalone', // For Docker deployments
+    swcMinify: true,
+    output: 'standalone',
   }),
   
-  // Enable experimental features if needed
+  // Experimental features
   experimental: {
-    // appDir: true, // Already enabled by default in Next.js 13+
-    serverActions: true, // If using Server Actions
-    optimizePackageImports: ['framer-motion'], // Optimize specific packages
+    // appDir: true, // Only needed if you're not using the app directory by default
+    serverActions: {
+      enabled: true, // Changed from boolean to object with enabled property
+    },
+    optimizePackageImports: ['framer-motion'],
   }
 };
 
