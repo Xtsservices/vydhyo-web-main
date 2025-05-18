@@ -247,6 +247,7 @@ const rightImageContainer: React.CSSProperties = {
   justifyContent: 'center',
   alignItems: 'center',
   position: 'relative',
+  marginLeft: '-2.5rem',
 };
 
 const imageStyle: React.CSSProperties = {
@@ -255,6 +256,7 @@ const imageStyle: React.CSSProperties = {
   width: '100%',
   maxWidth: '600px',
   zIndex: 1,
+
 };
 
 const imageOverlayStyle: React.CSSProperties = {
@@ -266,6 +268,8 @@ const imageOverlayStyle: React.CSSProperties = {
   borderRadius: '9999px',
   boxShadow: '0 10px 15px -3px rgba(0, 0, 0, 0.1)',
   zIndex: 2,
+  marginLeft: '-4rem',
+  
 };
 
 const overlayTextStyle: React.CSSProperties = {
