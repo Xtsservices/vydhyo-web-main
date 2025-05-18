@@ -146,9 +146,9 @@ const logoImageStyle: React.CSSProperties = {
   maxWidth: "100%",
   objectFit: "contain",
   transition: "height 0.3s ease",
-  marginTop: "-4rem",
+  marginTop: "-4.3rem",
   marginBottom: "-4rem",
-  marginLeft: "-1rem",
+  marginLeft: "-1.5rem",
 };
 
 const navStyle: React.CSSProperties = {
