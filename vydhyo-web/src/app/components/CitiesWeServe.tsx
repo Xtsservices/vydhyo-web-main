@@ -1,7 +1,6 @@
 'use client';
 import React, { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
-import Image from "next/image";
 
 interface FeatureCard {
   title: string;
@@ -10,80 +9,31 @@ interface FeatureCard {
   icon: string;
 }
 
-const FeatureCarousel: React.FC = () => {
+const itemVariants = {
+  hidden: { opacity: 0, y: 40 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.7, ease: "easeOut" } }
+};
+
+const CitiesWeServe: React.FC = () => {
   const features: FeatureCard[] = [
     {
-      title: "Doctor Directory",
-      description: "Find and connect with specialized healthcare professionals",
-      image: "https://images.unsplash.com/photo-1579684385127-1ef15d508118?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&h=400&q=80",
+      title: "Nizamabad",
+      description: "Comprehensive healthcare network with leading hospitals and clinics offering specialized services.",
+      image: "./images/nizamabad.png",
       icon: "👨‍⚕️"
     },
     {
-      title: "Instant Appointments",
-      description: "Book same-day virtual or in-person consultations",
-      image: "https://images.unsplash.com/photo-1581093450021-4a7360e9a7d0?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&h=400&q=80",
+      title: "Warangal",
+      description: "Strong presence of verified healthcare providers and emergency services throughout the city.",
+      image: "./images/warangal.png",
       icon: "📅"
     },
     {
-      title: "Digital Prescriptions",
-      description: "Get medications prescribed and delivered to your pharmacy",
-      image: "https://images.unsplash.com/photo-1581094271901-8022df4466f9?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&h=400&q=80",
+      title: "Karimnagar",
+      description: "Growing network of quality healthcare professionals and facilities for diverse medical needs",
+      image: "./images/karimnagar.png",
       icon: "💊"
     },
-    {
-      title: "Health Records",
-      description: "Securely access your medical history anytime, anywhere",
-      image: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&h=400&q=80",
-      icon: "📋"
-    },
-    {
-      title: "Symptom Checker",
-      description: "AI-powered preliminary health assessment tool",
-      image: "https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&h=400&q=80",
-      icon: "🤖"
-    },
-    {
-      title: "Wellness Programs",
-      description: "Personalized health plans for chronic condition management",
-      image: "https://images.unsplash.com/photo-1581094271901-8022df4466f9?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&h=400&q=80",
-      icon: "❤️"
-    },
-    {
-      title: "Telemedicine",
-      description: "Virtual consultations from the comfort of your home",
-      image: "https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&h=400&q=80",
-      icon: "📱"
-    },
-    {
-      title: "Lab Tests",
-      description: "Schedule and view results of diagnostic tests",
-      image: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&h=400&q=80",
-      icon: "🧪"
-    },
-    {
-      title: "Medication Tracker",
-      description: "Never miss a dose with our smart reminders",
-      image: "https://images.unsplash.com/photo-1581094271901-8022df4466f9?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&h=400&q=80",
-      icon: "⏰"
-    },
-    {
-      title: "Family Health",
-      description: "Manage healthcare for your entire family in one place",
-      image: "https://images.unsplash.com/photo-1579684385127-1ef15d508118?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&h=400&q=80",
-      icon: "👪"
-    },
-    {
-      title: "Health Insurance",
-      description: "Compare and manage your health coverage options",
-      image: "https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&h=400&q=80",
-      icon: "🛡️"
-    },
-    {
-      title: "Fitness Tracking",
-      description: "Connect wearables and track your health metrics",
-      image: "https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&h=400&q=80",
-      icon: "🏃‍♂️"
-    }
   ];
 
   const [isPaused, setIsPaused] = useState(false);
@@ -99,7 +49,7 @@ const FeatureCarousel: React.FC = () => {
 
   // Clone features to create seamless looping
   useEffect(() => {
-    setClonedFeatures([...features, ...features]);
+    setClonedFeatures([...features, ...features, ...features]); // Triple the items for smoother looping
   }, []);
 
   const getCardsToShow = () => {
@@ -140,15 +90,30 @@ const FeatureCarousel: React.FC = () => {
         progress.current = 0;
         setCurrentIndex(prev => {
           // When we reach the end of the original array, reset to 0 seamlessly
-          if (prev >= features.length - 1) return 0;
-          return prev + 1;
+          const nextIndex = prev + 1;
+          if (nextIndex >= features.length) return 0;
+          return nextIndex;
         });
       }
     }
 
     if (carouselRef.current) {
+      // Calculate offset with wrapping
+      const totalWidth = features.length * cardWidth;
       const offset = -currentIndex * cardWidth - (progress.current * cardWidth);
-      carouselRef.current.style.transform = `translateX(${offset}px)`;
+      
+      // When we're at the cloned section, instantly jump back to the original
+      if (currentIndex >= features.length) {
+        carouselRef.current.style.transition = 'none';
+        carouselRef.current.style.transform = `translateX(${-currentIndex * cardWidth}px)`;
+        // Force reflow
+        carouselRef.current.offsetHeight;
+        setCurrentIndex(0);
+        progress.current = 0;
+        carouselRef.current.style.transition = 'transform 0.7s ease-out';
+      } else {
+        carouselRef.current.style.transform = `translateX(${offset}px)`;
+      }
     }
 
     animationRef.current = requestAnimationFrame(animate);
@@ -163,15 +128,88 @@ const FeatureCarousel: React.FC = () => {
 
   return (
     <div className="feature-carousel-container">
-      <motion.div 
-        className="feature-carousel-header"
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.6 }}
-      >
-        <h2>Vydhyo Healthcare Solutions</h2>
-        <p>Revolutionizing digital healthcare with innovative features</p>
-      </motion.div>
+      {/* Header */}
+              <motion.div variants={itemVariants} style={{ marginBottom: "3rem" }}>
+                  <div style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    minHeight: "120px",
+                    margin: "0 auto 1.5rem auto"
+                  }}>
+                    <div style={{
+                    display: "inline-flex",
+                    alignItems: "center",
+                    gap: "0.75rem",
+                    background: "rgba(162, 28, 245, 0.07)",
+                    borderRadius: "2rem",
+                    padding: "0.5rem 1.5rem",
+                    border: "1.5px solid #e0e7ef",
+                    boxShadow: "0 2px 8px rgba(162, 28, 245, 0.09)",
+                    position: "relative",
+                    zIndex: 1
+                    }}>
+                    {/* Gradient border overlay */}
+                    <span style={{
+                      position: "absolute",
+                      top: "-5px",
+                      left: "-5px",
+                      right: "-5px",
+                      bottom: "-5px",
+                      borderRadius: "2.5rem",
+                      padding: 0,
+                      zIndex: 0,
+                      pointerEvents: "none",
+                      background: "linear-gradient(90deg, #a21cf5 0%, #6366f1 100%)",
+                      opacity: 0.18,
+                      border: "none",
+                      boxShadow: "none"
+                    }} />
+                    <svg width="28" height="28" viewBox="0 0 28 28" fill="none" style={{display: "block", zIndex: 1}} xmlns="http://www.w3.org/2000/svg">
+                      <g filter="url(#filter0_d_1_2)">
+                      <path d="M14 4L23 20H5L14 4Z" fill="#A21CF5"/>
+                      <path d="M14 4L23 20H5L14 4Z" fill="url(#paint0_linear_1_2)" fillOpacity="0.5"/>
+                      <path d="M14 4L23 20H5L14 4Z" stroke="#A21CF5" strokeWidth="1.5" strokeLinejoin="round"/>
+                      </g>
+                      <defs>
+                      <filter id="filter0_d_1_2" x="0" y="0" width="28" height="28" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
+                        <feFlood floodOpacity="0" result="BackgroundImageFix"/>
+                        <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+                        <feOffset dy="2"/>
+                        <feGaussianBlur stdDeviation="2"/>
+                        <feComposite in2="hardAlpha" operator="out"/>
+                        <feColorMatrix type="matrix" values="0 0 0 0 0.635294 0 0 0 0 0.109804 0 0 0 0 0.960784 0 0 0 0.15 0"/>
+                        <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_1_2"/>
+                        <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_1_2" result="shape"/>
+                      </filter>
+                      <linearGradient id="paint0_linear_1_2" x1="14" y1="4" x2="14" y2="20" gradientUnits="userSpaceOnUse">
+                        <stop stopColor="#A21CF5"/>
+                        <stop offset="1" stopColor="#6366F1"/>
+                      </linearGradient>
+                      </defs>
+                    </svg>
+                    <span style={{
+                      fontSize: "1.15rem",
+                      fontWeight: 500,
+                      color: "white",
+                      letterSpacing: "0.01em",
+                      zIndex: 1
+                    }}>
+                      Cities We Serve
+                    </span>
+                    </div>
+                  </div>
+                  <p style={{
+                    fontSize: "1.1rem",
+                    color: "white",
+                    maxWidth: "700px",
+                    margin: "0 auto",
+                    textAlign: "center",
+                    lineHeight: 1.6
+                  }}>
+                    VYDYO is revolutionizing healthcare access through technology that connects patients with the right care at the right time.
+                  </p>
+                </motion.div>
 
       <div 
         className="feature-carousel-wrapper"
@@ -195,13 +233,10 @@ const FeatureCarousel: React.FC = () => {
               transition={{ type: "spring", stiffness: 400, damping: 10 }}
             >
               <div className="feature-image-container">
-                <Image
-                  src={feature.image}
+                <img 
+                  src={feature.image} 
                   alt={feature.title}
-                  width={600}
-                  height={400}
                   className="feature-image"
-                  priority={index < 6} // Only prioritize first few images
                 />
                 <div className="feature-icon">{feature.icon}</div>
               </div>
@@ -407,4 +442,4 @@ const FeatureCarousel: React.FC = () => {
   );
 };
 
-export default FeatureCarousel;
+export default CitiesWeServe;

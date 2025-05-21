@@ -1,41 +1,71 @@
 import Header from "./components/Header";
-import IndexPage from "./pages/index";
-import FeaturePills from './components/ScrollingFeaturePills';
-import LtrRtlTemplates from './components/LtrRtlTemplates';
+import IndexPage from "./components/index";
+import Carousel1 from './components/Carousel1';
+import AboutUs from './components/AboutUs'; 
 import ChooseUsSection from './components/ChooseUsSection';
-import MultiTemplateLayout from './components/MultiTemplateLayout';
+import Services from './components/Services';
 import FrontEndDashboards from './components/FrontEndDashboards';
-import FeatureSlider from "./components/FeatureSlider";
-import KeyFeatures from "./components/keyFeatures";
-import AdminDashboard from "./components/AdminDashboard";
-import Unleash from "./components/Unleash";
+import CitiesWeServe from "./components/CitiesWeServe";
+import DoctorAppointments from "./components/DoctorAppointments";
 import CustomerStories from "./components/CustomerStories";
 import Pricing from "./components/Pricing";
-import FeaturesAtGlance from "./components/FeaturesAtGlance";
-import QandA from "./components/Q&A";
+import PrivacyPolicy from "./components/PrivacyPolicy";
 import Footer from "./components/Footer";
+import ContactUs from "./components/ContactUs";
 
 export default function Home() {
   return (
    <div style={{ overflowX: 'hidden', width: '100%' }}>
     <Header/>
-    <IndexPage/>
-    <div style={{ maxWidth: '100vw', overflowX: 'hidden' }}>
-      <FeaturePills />
-      <LtrRtlTemplates />
-      <ChooseUsSection />
-      <MultiTemplateLayout />
-      <FeaturePills />
-      <FrontEndDashboards/>
-      <FeatureSlider />
-      <KeyFeatures />
-      <AdminDashboard />
-      <Unleash />
-      <CustomerStories />
-      <Pricing />
-      <FeaturesAtGlance />
-      <QandA />
-    </div>
+    
+    {/* Main content with padding to account for fixed header */}
+    <main style={{ paddingTop: '140px' }}>
+      {/* Home/Hero Section */}
+      <section id="home">
+        <IndexPage/>
+      </section>
+      
+      <div style={{ maxWidth: '100vw', overflowX: 'hidden' }}>
+        
+        {/* About Us Section */}
+        <section id="about-us">
+          <AboutUs/>
+          <ChooseUsSection />
+        </section>
+        
+        {/* Services Section */}
+        <section id="services">
+          <Services/>
+          <FrontEndDashboards/>
+          <DoctorAppointments/>
+        </section>
+        
+        {/* Features Section */}
+        <section id="CitiesWeServe">
+          <CitiesWeServe/>
+          {/* Add your features components here */}
+        </section>
+        
+        {/* Testimonials Section */}
+        <section id="testimonials">
+          <CustomerStories />
+        </section>
+        
+        {/* Pricing Section */}
+        <section id="pricing">
+          <Pricing />
+        </section>
+        
+        {/* Contact Section */}
+        <section id="contact">
+          <ContactUs/>
+        </section>
+        
+        {/* Footer and legal sections */}
+        <PrivacyPolicy />
+      </div>
+    </main>
+    
     <Footer />
    </div>
   );

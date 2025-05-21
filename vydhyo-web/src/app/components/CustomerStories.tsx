@@ -1,188 +1,176 @@
 import React from "react";
+import { m as motion } from "framer-motion";
 
-const customerStories = [
-    {
-        name: "Dr. Anjali Mehra",
-        avatar: "🩺",
-        rating: 5,
-        title: "Appointment Scheduling",
-        feedback:
-            "Vydhyo Doctor App has made scheduling appointments seamless for my clinic. The interface is intuitive and my patients love the reminders.",
-    },
-    {
-        name: "healthcarepro99",
-        avatar: "🩺",
-        rating: 5,
-        title: "Video Consultation",
-        feedback:
-            "The video call quality is excellent. I can consult with patients remotely without any hassle. Support team is very responsive.",
-    },
-    {
-        name: "drsureshpatil",
-        avatar: "🩺",
-        rating: 5,
-        title: "Patient Records",
-        feedback:
-            "Managing patient records is now effortless. I can access history and prescriptions anytime, anywhere. Highly recommended!",
-    },
-    {
-        name: "medic_jane",
-        avatar: "🩺",
-        rating: 5,
-        title: "Customer Support",
-        feedback:
-            "The support team helped me set up my profile and answered all my queries quickly. Great experience so far.",
-    },
-    {
-        name: "Dr. Rohan Gupta",
-        avatar: "🩺",
-        rating: 5,
-        title: "Prescription Management",
-        feedback:
-            "Issuing digital prescriptions is fast and secure. My patients appreciate receiving them instantly on their phones.",
-    },
-    {
-        name: "cliniccare",
-        avatar: "🩺",
-        rating: 5,
-        title: "User Experience",
-        feedback:
-            "The app is user-friendly and reliable. It has improved my workflow and helped me connect with more patients.",
-    },
-];
-
-const CustomerStories: React.FC = () => {
-    return (
-        <div
-            style={{
-                background: "linear-gradient(90deg, #1e90ff 0%, #4f5bd5 100%)",
-                minHeight: "100vh",
-                padding: "20px",
-                margin: "0",
-                fontFamily: "Segoe UI, Arial, sans-serif",
-                boxSizing: "border-box",
-                width: "100%",
-                overflowX: "hidden",
-            }}
-        >
-            <div style={{ 
-                padding: "40px 0 0 0", 
-                textAlign: "center",
-                maxWidth: "1200px",
-                margin: "0 auto",
-                width: "100%",
-                paddingLeft: "20px",
-                paddingRight: "20px",
-            }}>
-                <button
-                    style={{
-                        background: "#fff",
-                        color: "#1e90ff",
-                        border: "none",
-                        borderRadius: "32px",
-                        padding: "16px 40px",
-                        fontWeight: 600,
-                        fontSize: "18px",
-                        boxShadow: "0 2px 8px rgba(30,144,255,0.08)",
-                        marginBottom: "32px",
-                        display: "inline-flex",
-                        alignItems: "center",
-                        gap: "10px",
-                        cursor: "pointer",
-                        maxWidth: "100%",
-                    }}
-                >
-                    <span role="img" aria-label="stories">
-                        🎤
-                    </span>
-                    Customer Stories
-                </button>
-                <h2
-                    style={{
-                        color: "#fff",
-                        fontWeight: 700,
-                        fontSize: "clamp(1.5rem, 5vw, 2.2rem)",
-                        margin: "0 0 10px 0",
-                        letterSpacing: "-1px",
-                        lineHeight: 1.2,
-                        padding: "0 10px",
-                    }}
-                >
-                    Our Customer's trust Vydhyo for its<br />
-                    reliability and efficiency.
-                </h2>
-            </div>
-            <div
-                style={{
-                    display: "grid",
-                    gridTemplateColumns: "repeat(auto-fit, minmax(min(300px, 100%), 1fr))",
-                    gap: "24px",
-                    margin: "40px auto 0 auto",
-                    maxWidth: "1400px",
-                    padding: "0 20px",
-                    width: "100%",
-                    boxSizing: "border-box",
-                }}
-            >
-                {customerStories.map((story, idx) => (
-                    <div
-                        key={idx}
-                        style={{
-                            background: "linear-gradient(90deg, rgba(79,91,213,0.95) 0%, rgba(30,144,255,0.95) 100%)",
-                            borderRadius: "16px",
-                            padding: "24px",
-                            color: "#fff",
-                            width: "100%",
-                            minHeight: "180px",
-                            boxShadow: "0 4px 24px rgba(30,144,255,0.10)",
-                            display: "flex",
-                            flexDirection: "column",
-                            marginBottom: "0",
-                            boxSizing: "border-box",
-                        }}
-                    >
-                        <div style={{ display: "flex", alignItems: "center", marginBottom: 8 }}>
-                            <div
-                                style={{
-                                    width: 56,
-                                    height: 56,
-                                    borderRadius: "50%",
-                                    background: "#a3e635",
-                                    display: "flex",
-                                    alignItems: "center",
-                                    justifyContent: "center",
-                                    fontSize: "2rem",
-                                    marginRight: 16,
-                                    flexShrink: 0,
-                                }}
-                            >
-                                {story.avatar}
-                            </div>
-                            <div style={{ overflow: "hidden" }}>
-                                <div style={{ 
-                                    fontWeight: 700, 
-                                    fontSize: "1.15rem", 
-                                    color: "#fff",
-                                    whiteSpace: "nowrap",
-                                    overflow: "hidden",
-                                    textOverflow: "ellipsis"
-                                }}>
-                                    {story.name}
-                                </div>
-                                <div>
-                                    {Array.from({ length: story.rating }).map((_, i) => (
-                                        <span key={i} style={{ color: "#ffd700", fontSize: "1.1rem", marginRight: 2 }}>★</span>
-                                    ))}
-                                </div>
-                            </div>
-                        </div>
-                        <div style={{ fontWeight: 600, marginBottom: 6, color: "#fff", fontSize: "1.05rem" }}>{story.title}</div>
-                        <div style={{ fontSize: "1rem", opacity: 0.95, color: "#fff" }}>{story.feedback}</div>
-                    </div>
-                ))}
-            </div>
-        </div>
-    );
+const itemVariants = {
+  hidden: { opacity: 0, y: 40 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.7, ease: "easeOut" } }
 };
 
-export default CustomerStories;
+const stories = [
+  {
+    name: "Priya Sharma",
+    image: "/images/patient1.jpg",
+    text: `"VYDY0 helped me find a cardiologist for my father at midnight when he experienced chest pain. The ambulance arrived in minutes, potentially saving his life."`,
+  },
+  {
+    name: "Rajesh Patel",
+    image: "/images/patient2.jpg",
+    text: `"As someone with mobility issues, the home healthcare service has been a blessing. My physiotherapist comes to me regularly, improving my quality of life tremendously."`,
+  },
+  {
+    name: "Anita Reddy",
+    image: "/images/patient3.jpg",
+    text: `"When my son developed a high fever, I booked a pediatrician instantly through VYDY0. No waiting room, no delay – the doctor saw us within hours."`,
+  },
+];
+
+export default function CustomerStories() {
+  // If motion is still undefined, create a fallback div
+  const MotionDiv = motion.div || (({ children, ...props }: { children?: React.ReactNode } & React.HTMLAttributes<HTMLDivElement>) => <div {...props}>{children}</div>);
+
+  return (
+    <section style={{ background: "#d6c9bb", padding: "40px 0" }}>
+      <div style={{ maxWidth: 1200, margin: "0 auto", padding: "0 32px" }}>
+        {/* Header */}
+        <MotionDiv 
+          initial="hidden"
+          animate="show"
+          variants={itemVariants} 
+          style={{ marginBottom: "3rem" }}
+        >
+          <div style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            minHeight: "120px",
+            margin: "0 auto 1.5rem auto"
+          }}>
+            <div style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "0.75rem",
+              background: "rgba(162, 28, 245, 0.07)",
+              borderRadius: "2rem",
+              padding: "0.5rem 1.5rem",
+              border: "1.5px solid #e0e7ef",
+              boxShadow: "0 2px 8px rgba(162, 28, 245, 0.09)",
+              position: "relative",
+              zIndex: 1
+            }}>
+              <span style={{
+                position: "absolute",
+                top: "-5px",
+                left: "-5px",
+                right: "-5px",
+                bottom: "-5px",
+                borderRadius: "2.5rem",
+                padding: 0,
+                zIndex: 0,
+                pointerEvents: "none",
+                background: "linear-gradient(90deg, #a21cf5 0%, #6366f1 100%)",
+                opacity: 0.18,
+                border: "none",
+                boxShadow: "none"
+              }} />
+              <svg width="28" height="28" viewBox="0 0 28 28" fill="none" style={{display: "block", zIndex: 1}} xmlns="http://www.w3.org/2000/svg">
+                <g filter="url(#filter0_d_1_2)">
+                  <path d="M14 4L23 20H5L14 4Z" fill="#A21CF5"/>
+                  <path d="M14 4L23 20H5L14 4Z" fill="url(#paint0_linear_1_2)" fillOpacity="0.5"/>
+                  <path d="M14 4L23 20H5L14 4Z" stroke="#A21CF5" strokeWidth="1.5" strokeLinejoin="round"/>
+                </g>
+                <defs>
+                  <filter id="filter0_d_1_2" x="0" y="0" width="28" height="28" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
+                    <feFlood floodOpacity="0" result="BackgroundImageFix"/>
+                    <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha"/>
+                    <feOffset dy="2"/>
+                    <feGaussianBlur stdDeviation="2"/>
+                    <feComposite in2="hardAlpha" operator="out"/>
+                    <feColorMatrix type="matrix" values="0 0 0 0 0.635294 0 0 0 0 0.109804 0 0 0 0 0.960784 0 0 0 0.15 0"/>
+                    <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_1_2"/>
+                    <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_1_2" result="shape"/>
+                  </filter>
+                  <linearGradient id="paint0_linear_1_2" x1="14" y1="4" x2="14" y2="20" gradientUnits="userSpaceOnUse">
+                    <stop stopColor="#A21CF5"/>
+                    <stop offset="1" stopColor="#6366F1"/>
+                  </linearGradient>
+                </defs>
+              </svg>
+              <span style={{
+                fontSize: "1.15rem",
+                fontWeight: 500,
+                color: "white",
+                letterSpacing: "0.01em",
+                zIndex: 1
+              }}>
+                Patient Stories
+              </span>
+            </div>
+          </div>
+          <p style={{
+            fontSize: "1.1rem",
+            color: "white",
+            maxWidth: "700px",
+            margin: "0 auto",
+            textAlign: "center",
+            lineHeight: 1.6
+          }}>
+            VYDYO is revolutionizing healthcare access through technology that connects patients with the right care at the right time.
+          </p>
+        </MotionDiv>
+
+        <div style={{
+          display: "flex",
+          gap: 32,
+          flexWrap: "wrap",
+          justifyContent: "space-between",
+        }}>
+          {stories.map((story, index) => (
+            <MotionDiv
+              key={story.name}
+              initial="hidden"
+              animate="show"
+              variants={itemVariants}
+              transition={{ delay: index * 0.1 }}
+              style={{
+                background: "transparent",
+                flex: "1 1 300px",
+                minWidth: 300,
+                maxWidth: 370,
+                marginBottom: 32,
+              }}
+            >
+              <img
+                src={story.image}
+                alt={story.name}
+                style={{
+                  width: "100%",
+                  height: 220,
+                  objectFit: "cover",
+                  borderRadius: 4,
+                  marginBottom: 20,
+                }}
+              />
+              <h3 style={{
+                fontSize: "1.5rem",
+                fontWeight: 700,
+                color: "#3a2d1a",
+                marginBottom: 12,
+                fontFamily: "serif",
+              }}>
+                {story.name}
+              </h3>
+              <p style={{
+                fontSize: "1.1rem",
+                color: "#3a2d1a",
+                lineHeight: 1.7,
+                fontFamily: "serif",
+              }}>
+                {story.text}
+              </p>
+            </MotionDiv>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
