@@ -1,12 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
-import { Row, Col, Card } from "antd";
+import React, { useState, useEffect } from "react";
+import { Row, Col } from "antd";
 import {
-  FileTextOutlined,
-  DatabaseOutlined,
-  AppstoreAddOutlined,
-  DashboardOutlined,
   CalendarOutlined,
   TeamOutlined,
   MedicineBoxOutlined,
@@ -25,33 +21,33 @@ interface Feature {
 const features: Feature[] = [
   {
     icon: <CalendarOutlined />,
-    title: "Smart Appointment System",
+    title: "Real-time bookings & instant confirmation",
     description:
-      "Automated scheduling with real-time availability, reminders, and rescheduling options for patients.",
+      "Schedule appointments with verified healthcare providers and receive immediate confirmation, saving precious time.",
     iconBgColor: "#8b5cf6",
     iconColor: "white",
   },
   {
-    icon: <TeamOutlined />,
-    title: "Patient Management",
+    icon: <MedicineBoxOutlined />,
+    title: "Local verified doctors & providers you can trust",
     description:
-      "Comprehensive patient profiles with medical history, prescriptions, and visit records all in one place.",
+      "Every healthcare professional on our platform undergoes thorough verification for your peace of mind.",
     iconBgColor: "#10b981",
     iconColor: "white",
   },
   {
-    icon: <MedicineBoxOutlined />,
-    title: "E-Prescriptions",
+    icon: <TeamOutlined />,
+    title: "Vernacular language support",
     description:
-      "Generate digital prescriptions that can be shared instantly with patients and pharmacies.",
+      "Navigate healthcare in your preferred language, making quality care accessible to everyone.",
     iconBgColor: "#22d3ee",
     iconColor: "white",
   },
   {
     icon: <LineChartOutlined />,
-    title: "Analytics Dashboard",
+    title: "Integrated services & seamless payments",
     description:
-      "Track clinic performance, patient flow, and financial metrics with intuitive visualizations.",
+      "Access multiple healthcare needs through one platform with hassle-free payment options.",
     iconBgColor: "#f97316",
     iconColor: "white",
   },
@@ -59,6 +55,84 @@ const features: Feature[] = [
 
 const ChooseUsSection: React.FC = () => {
   const [hoverIndex, setHoverIndex] = useState<number | null>(null);
+  const [currentFlipIndex, setCurrentFlipIndex] = useState(0);
+  const [countersStarted, setCountersStarted] = useState(false);
+  const [counterValues, setCounterValues] = useState({
+    hospitals: 0,
+    doctors: 0,
+  });
+  const [isMobile, setIsMobile] = useState(false);
+  const [isInView, setIsInView] = useState(false);
+
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  useEffect(() => {
+    if (!isInView) return;
+    
+    const interval = setInterval(() => {
+      setCurrentFlipIndex((prev) => (prev + 1) % features.length);
+    }, 2000);
+    return () => clearInterval(interval);
+  }, [isInView, features.length]);
+
+  useEffect(() => {
+    if (!isInView) {
+      setCounterValues({ hospitals: 0, doctors: 0 });
+      return;
+    }
+    
+    const targetValues = {
+      hospitals: 50,
+      doctors: 100,
+    };
+
+    const startCounters = () => {
+      setCountersStarted(true);
+      
+      const duration = 3000;
+      const startTime = Date.now();
+      const endTime = startTime + duration;
+
+      const animate = () => {
+        const now = Date.now();
+        const elapsed = now - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        
+        const easedProgress = 1 - Math.pow(1 - progress, 3);
+
+        setCounterValues({
+          hospitals: Math.floor(easedProgress * targetValues.hospitals),
+          doctors: Math.floor(easedProgress * targetValues.doctors),
+        });
+
+        if (now < endTime) {
+          requestAnimationFrame(animate);
+        } else {
+          setCounterValues(targetValues);
+          setTimeout(() => {
+            setCounterValues({ hospitals: 0, doctors: 0 });
+            setTimeout(startCounters, 500);
+          }, 3000);
+        }
+      };
+
+      requestAnimationFrame(animate);
+    };
+
+    startCounters();
+
+    return () => {
+      setCountersStarted(false);
+    };
+  }, [isInView]);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -66,20 +140,48 @@ const ChooseUsSection: React.FC = () => {
       opacity: 1,
       transition: {
         staggerChildren: 0.2,
+        when: "beforeChildren",
       },
     },
   };
 
   const itemVariants = {
-    hidden: { y: 50, opacity: 0 },
+    hidden: { y: 80, opacity: 0 },
     visible: {
       y: 0,
       opacity: 1,
+      transition: {
+        duration: 0.8,
+        ease: [0.16, 0.77, 0.47, 0.97],
+      },
+    },
+  };
+
+  const flipVariants = {
+    front: {
+      rotateY: 0,
       transition: {
         duration: 0.6,
         ease: "easeOut",
       },
     },
+    back: {
+      rotateY: 180,
+      transition: {
+        duration: 0.6,
+        ease: "easeOut",
+      },
+    },
+  };
+
+  const contentVariants = {
+    front: { opacity: 1 },
+    back: { opacity: 0 },
+  };
+
+  const backContentVariants = {
+    front: { opacity: 0 },
+    back: { opacity: 1 },
   };
 
   return (
@@ -89,14 +191,15 @@ const ChooseUsSection: React.FC = () => {
       whileInView="visible"
       variants={containerVariants}
       viewport={{ once: true, margin: "-100px" }}
+      onViewportEnter={() => setIsInView(true)}
+      onViewportLeave={() => setIsInView(false)}
     >
-      <div style={containerStyle}>
+      <div style={{ ...containerStyle, flexDirection: isMobile ? "column" : "row" }}>
         {/* Left side */}
-        <motion.div style={leftContentStyle} variants={itemVariants}>
+        <motion.div style={{ ...leftContentStyle, width: isMobile ? "100%" : "auto" }}>
           <motion.div 
             style={pillStyle}
-            whileHover={{ scale: 1.05 }}
-            transition={{ type: "spring", stiffness: 400, damping: 10 }}
+            variants={itemVariants}
           >
             <div style={pillIconStyle}>
               <svg
@@ -118,47 +221,61 @@ const ChooseUsSection: React.FC = () => {
             <span style={pillTextStyle}>Why Choose Vydhyo</span>
           </motion.div>
 
-          <motion.h2 style={headerStyle} variants={itemVariants}>
-            Transform Your Clinic with <span style={{ color: "#3b82f6" }}>Vydhyo</span> Digital Healthcare Solution
+          <motion.h2 
+            style={{ ...headerStyle, fontSize: isMobile ? "2rem" : "2.5rem" }} 
+            variants={itemVariants}
+          >
+            Trusted By Healthcare Providers
           </motion.h2>
 
-          <motion.p style={subHeaderStyle} variants={itemVariants}>
+          <motion.p 
+            style={{ ...subHeaderStyle, maxWidth: isMobile ? "100%" : "440px" }} 
+            variants={itemVariants}
+          >
             Vydhyo is a comprehensive doctor appointment and clinic management platform designed to streamline your practice, enhance patient experience, and boost operational efficiency.
           </motion.p>
 
-          <motion.div variants={itemVariants}>
-            <Row gutter={48} style={{ marginTop: 32 }}>
-              <Col>
-                <motion.div 
+          <motion.div 
+            variants={itemVariants}
+          >
+            <Row gutter={[16, 16]} style={{ marginTop: 32 }} justify={isMobile ? "center" : "start"}>
+              <Col xs={24} sm={8} style={{ display: "flex", justifyContent: isMobile ? "center" : "flex-start" }}>
+                <motion.div
                   style={statBoxStyle}
                   whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                 >
                   <span style={statNumberStyle}>
-                    10K<span style={plusStyle}>+</span>
+                    {counterValues.hospitals}<span style={plusStyle}>+</span>
                   </span>
-                  <p style={statLabelStyle}>Happy Patients</p>
+                  <p style={statLabelStyle}>Partner Hospitals</p>
+                  <p style={statSubLabelStyle}>Leading healthcare institutions across multiple cities</p>
                 </motion.div>
               </Col>
-              <Col>
-                <motion.div 
+              <Col xs={24} sm={8} style={{ display: "flex", justifyContent: isMobile ? "center" : "flex-start" }}>
+                <motion.div
                   style={statBoxStyle}
                   whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                 >
                   <span style={statNumberStyle}>
-                    500<span style={plusStyle}>+</span>
+                    {counterValues.doctors}<span style={plusStyle}>+</span>
                   </span>
-                  <p style={statLabelStyle}>Partner Clinics</p>
+                  <p style={statLabelStyle}>Verified Doctors</p>
+                  <p style={statSubLabelStyle}>Specialists across numerous medical fields</p>
                 </motion.div>
               </Col>
-              <Col>
-                <motion.div 
+              <Col xs={24} sm={8} style={{ display: "flex", justifyContent: isMobile ? "center" : "flex-start" }}>
+                <motion.div
                   style={statBoxStyle}
                   whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
                 >
                   <span style={statNumberStyle}>
-                    99<span style={plusStyle}>%</span>
+                    24/7
                   </span>
-                  <p style={statLabelStyle}>Uptime Reliability</p>
+                  <p style={statLabelStyle}>Support Available</p>
+                  <p style={statSubLabelStyle}>Round-the-clock assistance for all users</p>
                 </motion.div>
               </Col>
             </Row>
@@ -166,20 +283,35 @@ const ChooseUsSection: React.FC = () => {
         </motion.div>
 
         {/* Right side */}
-        <div style={rightContentStyle}>
+        <div style={{ 
+          ...rightContentStyle, 
+          gridTemplateColumns: isMobile ? "1fr" : "repeat(2, 1fr)",
+          width: "100%",
+          marginTop: isMobile ? "2rem" : 0
+        }}>
           {features.map((feature, index) => {
             const isHovered = hoverIndex === index;
+            const isFlipping = currentFlipIndex === index && isInView;
+            
             return (
               <motion.div
                 key={index}
                 style={{
                   position: "relative",
-                  overflow: "hidden",
+                  overflow: "visible", // Changed from "hidden" to "visible" to prevent content cutting off
                   borderRadius: 12,
+                  perspective: "1000px",
+                  width: "100%",
+                  height: "240px", // Fixed height to prevent dimension changes during flip
                 }}
                 onMouseEnter={() => setHoverIndex(index)}
                 onMouseLeave={() => setHoverIndex(null)}
                 variants={itemVariants}
+                transition={{ 
+                  delay: 0.2 + index * 0.1,
+                  duration: 0.8,
+                  ease: [0.16, 0.77, 0.47, 0.97]
+                }}
                 whileHover={{ y: -5 }}
               >
                 <motion.div
@@ -189,80 +321,162 @@ const ChooseUsSection: React.FC = () => {
                     left: 0,
                     right: 0,
                     height: isHovered ? "100%" : 0,
-                    background:
-                      "linear-gradient(to top, #0ea5e9 0%, #3b82f6 100%)",
-                    transition: "height 0.3s ease",
+                    background: "linear-gradient(to top, #0ea5e9 0%, #3b82f6 100%)",
+                    transition: "height 0.6s cubic-bezier(0.16, 1, 0.3, 1)",
                     zIndex: 1,
+                    borderRadius: 12, // Added to match parent's borderRadius
                   }}
                   animate={{
                     height: isHovered ? "100%" : 0,
                   }}
                 />
-                <Card
-                  hoverable
+                
+                <motion.div
                   style={{
                     ...cardStyle,
-                    position: "relative",
+                    position: "absolute", // Changed to absolute positioning
                     zIndex: 2,
                     background: "#0f172a",
                     color: isHovered ? "white" : "#cbd5e1",
                     border: "none",
+                    transformStyle: "preserve-3d",
+                    width: "100%",
+                    height: "100%", // Takes full height of parent
+                    borderRadius: 12,
                   }}
-                  styles={{
-                    body: {
-                      padding: 24,
-                      textAlign: "left",
-                    },
-                  }}
+                  animate={isFlipping ? "back" : "front"}
+                  variants={flipVariants}
                 >
+                  {/* Front Content */}
                   <motion.div
                     style={{
-                      ...iconWrapperStyle,
-                      backgroundColor: isHovered
-                        ? "white"
-                        : feature.iconBgColor,
+                      padding: "24px",
+                      textAlign: "left",
+                      backfaceVisibility: "hidden",
+                      position: "absolute",
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      bottom: 0,
                       display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "space-between",
+                      borderRadius: 12,
+                      overflow: "hidden", // Contain content within the card
+                    }}
+                    variants={contentVariants}
+                    animate={isFlipping ? "back" : "front"}
+                  >
+                    <div>
+                      <motion.div
+                        style={{
+                          ...iconWrapperStyle,
+                          backgroundColor: isHovered ? "white" : feature.iconBgColor,
+                          display: "flex",
+                          justifyContent: "center",
+                          alignItems: "center",
+                        }}
+                        animate={{
+                          backgroundColor: isHovered ? "white" : feature.iconBgColor,
+                        }}
+                        transition={{ duration: 0.4 }}
+                      >
+                        {React.cloneElement(
+                          feature.icon as React.ReactElement<{ style?: React.CSSProperties }>,
+                          {
+                            style: {
+                              ...(feature.icon as React.ReactElement<{ style?: React.CSSProperties }>).props.style,
+                              color: isHovered ? "#3b82f6" : feature.iconColor,
+                              fontSize: 24,
+                            },
+                          }
+                        )}
+                      </motion.div>
+                      <h3
+                        style={{
+                          ...cardTitleStyle,
+                          color: isHovered ? "white" : "#cbd5e1",
+                        }}
+                      >
+                        {feature.title}
+                      </h3>
+                    </div>
+                    <p
+                      style={{
+                        ...cardDescStyle,
+                        color: isHovered ? "white" : "#94a3b8",
+                        marginBottom: 0
+                      }}
+                    >
+                      {feature.description}
+                    </p>
+                  </motion.div>
+                  
+                  {/* Back Content */}
+                  <motion.div
+                    style={{
+                      padding: "24px",
+                      textAlign: "center",
+                      backfaceVisibility: "hidden",
+                      position: "absolute",
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      bottom: 0,
+                      backgroundColor: "#1e293b",
+                      transform: "rotateY(180deg)",
+                      display: "flex",
+                      flexDirection: "column",
                       justifyContent: "center",
                       alignItems: "center",
+                      borderRadius: 12,
+                      overflow: "hidden", // Contain content within the card
                     }}
-                    animate={{
-                      backgroundColor: isHovered ? "white" : feature.iconBgColor,
-                    }}
+                    variants={backContentVariants}
+                    animate={isFlipping ? "back" : "front"}
                   >
-                    {React.cloneElement(
-                      feature.icon as React.ReactElement<{
-                        style?: React.CSSProperties;
-                      }>,
-                      {
-                        style: {
-                          ...(
-                            feature.icon as React.ReactElement<{
-                              style?: React.CSSProperties;
-                            }>
-                          ).props.style,
-                          color: isHovered ? "#3b82f6" : feature.iconColor,
-                          fontSize: 24,
-                        },
-                      }
-                    )}
+                    <motion.div
+                      style={{
+                        ...iconWrapperStyle,
+                        backgroundColor: "#3b82f6",
+                        marginBottom: 20,
+                      }}
+                    >
+                      {React.cloneElement(
+                        feature.icon as React.ReactElement<{ style?: React.CSSProperties }>,
+                        {
+                          style: {
+                            ...(feature.icon as React.ReactElement<{ style?: React.CSSProperties }>).props.style,
+                            color: "white",
+                            fontSize: 24,
+                          },
+                        }
+                      )}
+                    </motion.div>
+                    <h3 style={{ ...cardTitleStyle, color: "white" }}>
+                      {feature.title}
+                    </h3>
+                    <p style={{ ...cardDescStyle, color: "#e2e8f0" }}>
+                      Learn more about this feature
+                    </p>
+                    <motion.button
+                      style={{
+                        marginTop: 16,
+                        padding: "8px 16px",
+                        borderRadius: 6,
+                        border: "none",
+                        background: "linear-gradient(to right, #3b82f6, #1d4ed8)",
+                        color: "white",
+                        fontWeight: 600,
+                        cursor: "pointer",
+                      }}
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                    >
+                      Explore
+                    </motion.button>
                   </motion.div>
-                  <h3
-                    style={{
-                      ...cardTitleStyle,
-                      color: isHovered ? "white" : "#cbd5e1",
-                    }}
-                  >
-                    {feature.title}
-                  </h3>
-                  <p
-                    style={{
-                      ...cardDescStyle,
-                      color: isHovered ? "white" : "#94a3b8",
-                    }}
-                  >
-                    {feature.description}
-                  </p>
-                </Card>
+                </motion.div>
               </motion.div>
             );
           })}
@@ -272,13 +486,13 @@ const ChooseUsSection: React.FC = () => {
   );
 };
 
-// Enhanced Styles
 const sectionStyle: React.CSSProperties = {
   backgroundColor: "#0a132d",
-  padding: "6rem 2rem",
+  padding: "6rem 1rem",
   color: "white",
   fontFamily: "'Inter', sans-serif",
   backgroundImage: "radial-gradient(circle at 25% 25%, rgba(59, 130, 246, 0.1) 0%, transparent 50%)",
+  overflow: "hidden"
 };
 
 const containerStyle: React.CSSProperties = {
@@ -286,8 +500,9 @@ const containerStyle: React.CSSProperties = {
   margin: "0 auto",
   display: "flex",
   gap: 40,
-  flexWrap: "wrap",
-  justifyContent: "space-between",
+  padding: "0 1rem",
+  width: "100%",
+  boxSizing: "border-box"
 };
 
 const leftContentStyle: React.CSSProperties = {
@@ -327,7 +542,6 @@ const pillTextStyle: React.CSSProperties = {
 };
 
 const headerStyle: React.CSSProperties = {
-  fontSize: "2.5rem",
   fontWeight: 800,
   margin: "16px 0 24px",
   color: "white",
@@ -342,7 +556,6 @@ const subHeaderStyle: React.CSSProperties = {
   fontSize: "1.125rem",
   color: "#a1a9bb",
   lineHeight: 1.6,
-  maxWidth: 440,
   marginBottom: "1.5rem",
 };
 
@@ -353,6 +566,12 @@ const statBoxStyle: React.CSSProperties = {
   backgroundColor: "rgba(30, 58, 138, 0.2)",
   backdropFilter: "blur(4px)",
   border: "1px solid rgba(59, 130, 246, 0.2)",
+  width: "100%",
+  maxWidth: "300px",
+  minHeight: "160px",
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "center"
 };
 
 const statNumberStyle: React.CSSProperties = {
@@ -379,12 +598,19 @@ const statLabelStyle: React.CSSProperties = {
   fontWeight: 500,
 };
 
+const statSubLabelStyle: React.CSSProperties = {
+  fontSize: 12,
+  color: "#94a3b8",
+  marginTop: 4,
+  fontWeight: 400,
+  lineHeight: 1.4,
+};
+
 const rightContentStyle: React.CSSProperties = {
   display: "grid",
-  gridTemplateColumns: "repeat(2, 1fr)",
   gap: 24,
   flex: "1 1 400px",
-  maxWidth: 600,
+  width: "100%",
 };
 
 const cardStyle: React.CSSProperties = {
@@ -392,7 +618,7 @@ const cardStyle: React.CSSProperties = {
   borderRadius: 12,
   cursor: "pointer",
   transition: "all 0.3s ease",
-  height: "100%",
+  transformStyle: "preserve-3d",
 };
 
 const iconWrapperStyle: React.CSSProperties = {

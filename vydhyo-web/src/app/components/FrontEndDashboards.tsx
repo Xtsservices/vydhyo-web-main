@@ -1,322 +1,432 @@
-'use client';
-import React, { useState } from 'react';
-import Image from 'next/image';
+"use client";
 
-const doctorPages = [
-  { 
-    title: 'Doctor Dashboard', 
-    img: 'https://images.unsplash.com/photo-1581094271901-8022df4466f9?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
-    description: 'Comprehensive overview of your practice'
+import React, { useEffect, useRef } from "react";
+import { motion } from "framer-motion";
+
+const cardData = [
+  {
+    icon: (
+      <svg width="32" height="32" fill="none">
+        <rect x="7" y="10" width="18" height="2" rx="1" fill="#3B4CCA" />
+        <rect x="7" y="15" width="18" height="2" rx="1" fill="#3B4CCA" />
+        <rect x="7" y="20" width="12" height="2" rx="1" fill="#3B4CCA" />
+      </svg>
+    ),
+    title: "Get Listed",
+    subtitle: "Join our verified provider network",
+    width: 320,
   },
-  { 
-    title: 'Patient Management', 
-    img: 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
-    description: 'Manage all patient records and history'
+  {
+    icon: (
+      <svg width="32" height="32" fill="none">
+        <circle cx="16" cy="16" r="12" stroke="#3B4CCA" strokeWidth="2" />
+        <rect x="15" y="10" width="2" height="8" rx="1" fill="#3B4CCA" />
+        <rect x="16" y="16" width="6" height="2" rx="1" fill="#3B4CCA" />
+      </svg>
+    ),
+    title: "Hospital Dashboard",
+    subtitle: "Manage bookings and patient flow",
+    width: 400,
   },
-  { 
-    title: 'E-Prescriptions', 
-    img: 'https://images.unsplash.com/photo-1581094271901-8022df4466f9?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
-    description: 'Digital prescription management system'
+  {
+    icon: (
+      <svg width="32" height="32" fill="none">
+        <rect x="7" y="15" width="18" height="2" rx="1" fill="#3B4CCA" />
+        <rect x="7" y="20" width="18" height="2" rx="1" fill="#3B4CCA" />
+      </svg>
+    ),
+    title: "Referral Programs",
+    subtitle: "Expand your patient network",
+    width: 480,
   },
-  { 
-    title: 'Appointment Scheduler', 
-    img: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
-    description: 'Manage your availability and bookings'
-  }
+  
 ];
 
-const patientPages = [
-  { 
-    title: 'Patient Dashboard', 
-    img: 'https://images.unsplash.com/photo-1465101046530-73398c7f28ca?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
-    description: 'Personal health overview and insights'
-  },
-  { 
-    title: 'My Appointments', 
-    img: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
-    description: 'View and manage your appointments'
-  },
-  { 
-    title: 'E-Prescriptions', 
-    img: 'https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
-    description: 'Access your digital prescriptions'
-  },
-  { 
-    title: 'Health Records', 
-    img: 'https://images.unsplash.com/photo-1465101046530-73398c7f28ca?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
-    description: 'View and download your health records'
-  }
-];
+const itemVariants = {
+  hidden: { opacity: 0, y: 40 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.7, ease: "easeOut" } }
+};
 
 const FrontEndDashboards: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<'Doctors' | 'Patients'>('Doctors');
-  const [isFlipping, setIsFlipping] = useState(false);
-  const currentPages = activeTab === 'Doctors' ? doctorPages : patientPages;
+  const containerRef = useRef<HTMLDivElement>(null);
+  const cardsRef = useRef<(HTMLDivElement | null)[]>([]);
+  const headerRef = useRef<HTMLDivElement>(null);
+  const isVisibleRef = useRef(false);
 
-  const handleTabChange = (tab: 'Doctors' | 'Patients') => {
-    if (tab !== activeTab) {
-      setIsFlipping(true);
+  useEffect(() => {
+    // This function resets all animations by removing animation classes
+    const resetAnimations = () => {
+      if (containerRef.current) {
+        containerRef.current.classList.remove('animate-up');
+      }
+      
+      if (headerRef.current) {
+        headerRef.current.classList.remove('animate-up');
+      }
+      
+      cardsRef.current.forEach((card) => {
+        if (card) card.classList.remove('animate-up');
+      });
+    };
+
+    // This function applies animations by adding animation classes
+    const applyAnimations = () => {
       setTimeout(() => {
-        setActiveTab(tab);
-        setIsFlipping(false);
-      }, 300); // Match this duration with the CSS transition duration
+        if (containerRef.current) {
+          containerRef.current.classList.add('animate-up');
+        }
+        
+        if (headerRef.current) {
+          headerRef.current.classList.add('animate-up');
+        }
+        
+        cardsRef.current.forEach((card, index) => {
+          if (card) {
+            setTimeout(() => {
+              card.classList.add('animate-up');
+            }, 300 + (index * 100)); // Staggered delay for cards
+          }
+        });
+      }, 100);
+    };
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          // When the container enters the viewport
+          if (entry.isIntersecting && !isVisibleRef.current) {
+            isVisibleRef.current = true;
+            applyAnimations();
+          } 
+          // When the container exits the viewport
+          else if (!entry.isIntersecting && isVisibleRef.current) {
+            isVisibleRef.current = false;
+            resetAnimations();
+          }
+        });
+      },
+      { threshold: 0.1, rootMargin: "0px 0px -100px 0px" }
+    );
+
+    if (containerRef.current) {
+      observer.observe(containerRef.current);
     }
-  };
+
+    return () => {
+      observer.disconnect();
+    };
+  }, []);
 
   return (
-    <div className="admin-core-section">
-      <h1 className="admin-core-title">
-        Awesome Structured Admin Core Pages
-      </h1>
-      <div className="admin-core-tabs">
-        <button
-          className={`admin-core-tab${activeTab === 'Doctors' ? ' active' : ''}`}
-          onClick={() => handleTabChange('Doctors')}
-        >
-          <span className="tab-icon">
-            <svg width="24" height="24" fill="none" viewBox="0 0 24 24">
-              <circle cx="12" cy="7" r="4" stroke="currentColor" strokeWidth="2" />
-              <path d="M4 21v-2a4 4 0 014-4h8a4 4 0 014 4v2" stroke="currentColor" strokeWidth="2" />
-            </svg>
-          </span>
-          Doctors
-        </button>
-        <button
-          className={`admin-core-tab${activeTab === 'Patients' ? ' active' : ''}`}
-          onClick={() => handleTabChange('Patients')}
-        >
-          <span className="tab-icon">
-            <svg width="24" height="24" fill="none" viewBox="0 0 24 24">
-              <circle cx="12" cy="8" r="4" stroke="currentColor" strokeWidth="2" />
-              <path d="M6 21v-2a6 6 0 0112 0v2" stroke="currentColor" strokeWidth="2" />
-            </svg>
-          </span>
-          Patients
-        </button>
-      </div>
-      <div className={`admin-core-cards ${isFlipping ? 'flipping' : ''}`}>
-        {currentPages.map((page, idx) => (
-          <div className="admin-core-card" key={idx}>
-            <div className="admin-core-card-inner">
-              <div className="admin-core-card-front">
-                <div className="admin-core-card-img">
-                  <Image
-                    src={page.img}
-                    alt={page.title}
-                    fill
-                    style={{ objectFit: 'cover' }}
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                  />
-                </div>
-                <div className="admin-core-card-content">
-                  <div className="admin-core-card-title">{page.title}</div>
-                  <div className="admin-core-card-description">{page.description}</div>
-                </div>
-              </div>
-              <div className="admin-core-card-back">
-                <div className="admin-core-card-back-content">
-                  <div className="admin-core-card-back-title">{page.title}</div>
-                  <div className="admin-core-card-back-description">{page.description}</div>
-                  <button className="admin-core-card-button">Explore</button>
-                </div>
-              </div>
+    <div
+      className="dashboard-container"
+      ref={containerRef}
+    >
+      <div className="dashboard-content">
+        {/* Header */}
+        <motion.div variants={itemVariants} style={{ marginBottom: "3rem" }} ref={headerRef}>
+          <div style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            minHeight: "120px",
+            margin: "0 auto 1.5rem auto"
+          }}>
+            <div style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "0.75rem",
+              background: "rgba(162, 28, 245, 0.07)",
+              borderRadius: "2rem",
+              padding: "0.5rem 1.5rem",
+              border: "1.5px solid #e0e7ef",
+              boxShadow: "0 2px 8px rgba(162, 28, 245, 0.09)",
+              position: "relative",
+              zIndex: 1
+            }}>
+              {/* Gradient border overlay */}
+              <span style={{
+                position: "absolute",
+                top: "-5px",
+                left: "-5px",
+                right: "-5px",
+                bottom: "-5px",
+                borderRadius: "2.5rem",
+                padding: 0,
+                zIndex: 0,
+                pointerEvents: "none",
+                background: "linear-gradient(90deg, #a21cf5 0%, #6366f1 100%)",
+                opacity: 0.18,
+                border: "none",
+                boxShadow: "none"
+              }} />
+              <svg width="28" height="28" viewBox="0 0 28 28" fill="none" style={{ display: "block", zIndex: 1 }} xmlns="http://www.w3.org/2000/svg">
+                <g filter="url(#filter0_d_1_2)">
+                  <path d="M14 4L23 20H5L14 4Z" fill="#A21CF5" />
+                  <path d="M14 4L23 20H5L14 4Z" fill="url(#paint0_linear_1_2)" fillOpacity="0.5" />
+                  <path d="M14 4L23 20H5L14 4Z" stroke="#A21CF5" strokeWidth="1.5" strokeLinejoin="round" />
+                </g>
+                <defs>
+                  <filter id="filter0_d_1_2" x="0" y="0" width="28" height="28" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
+                    <feFlood floodOpacity="0" result="BackgroundImageFix" />
+                    <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha" />
+                    <feOffset dy="2" />
+                    <feGaussianBlur stdDeviation="2" />
+                    <feComposite in2="hardAlpha" operator="out" />
+                    <feColorMatrix type="matrix" values="0 0 0 0 0.635294 0 0 0 0 0.109804 0 0 0 0 0.960784 0 0 0 0.15 0" />
+                    <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_1_2" />
+                    <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_1_2" result="shape" />
+                  </filter>
+                  <linearGradient id="paint0_linear_1_2" x1="14" y1="4" x2="14" y2="20" gradientUnits="userSpaceOnUse">
+                    <stop stopColor="#A21CF5" />
+                    <stop offset="1" stopColor="#6366F1" />
+                  </linearGradient>
+                </defs>
+              </svg>
+              <span style={{
+                fontSize: "1.15rem",
+                fontWeight: 500,
+                color: "white",
+                letterSpacing: "0.01em",
+                zIndex: 1
+              }}>
+                For Hospitals & Clinics
+              </span>
             </div>
           </div>
-        ))}
+        </motion.div>
+
+        <div className="cards-container">
+          {cardData.map((card, index) => (
+            <div
+              key={index}
+              className={`dashboard-card ${card ? 'pro-card' : ''}`}
+              style={{ width: `${card.width}px` }}
+              ref={el => { cardsRef.current[index] = el; }}
+            >
+              <div className="card-icon">
+                {card.icon}
+              </div>
+              <div className="card-content">
+                <h3 className="card-title">{card.title}</h3>
+                <p className="card-subtitle">{card.subtitle}</p>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
-      <button className="admin-core-cta">
-        View Clinic Admin Pages
-        <span>
-          <svg width="20" height="20" fill="none" viewBox="0 0 24 24">
-            <path d="M9 18l6-6-6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-        </span>
-      </button>
+
       <style jsx>{`
-        .admin-core-section {
-          background: #fff;
+        .dashboard-container {
           min-height: 100vh;
-          padding: 3rem 2rem 2rem;
-          text-align: center;
-        }
-        .admin-core-title {
-          font-size: 2.5rem;
-          font-weight: 700;
-          color: #1e293b;
-          margin-bottom: 2.5rem;
-        }
-        .admin-core-tabs {
-          display: flex;
-          justify-content: center;
-          gap: 2rem;
-          margin-bottom: 2.5rem;
-        }
-        .admin-core-tab {
-          background: #fff;
-          border: 3px solid #e0e7ef;
-          color: #1e293b;
-          border-radius: 1.25rem;
-          font-size: 1.25rem;
-          font-weight: 600;
-          padding: 1.5rem 3rem;
-          box-shadow: 0 2px 8px rgba(30, 41, 59, 0.06);
-          display: flex;
-          align-items: center;
-          gap: 0.75rem;
-          cursor: pointer;
-          transition: all 0.2s;
-        }
-        .admin-core-tab.active {
-          background: #3b82f6;
+          background: linear-gradient(135deg, #011126 0%, #1E40AF 100%);
+          padding: 80px 0;
           color: #fff;
-          border-color: #3b82f6;
-          box-shadow: 0 4px 16px rgba(59, 130, 246, 0.15);
-        }
-        .tab-icon {
-          display: flex;
-          align-items: center;
-        }
-        .admin-core-cards {
-          display: grid;
-          grid-template-columns: repeat(4, 1fr);
-          gap: 2rem;
-          margin: 0 auto 2.5rem;
-          max-width: 1400px;
-          perspective: 1000px;
-        }
-        .admin-core-cards.flipping .admin-core-card-inner {
-          transform: rotateY(180deg);
-        }
-        .admin-core-card {
-          background: transparent;
-          perspective: 1000px;
-          height: 380px;
-        }
-        .admin-core-card-inner {
-          position: relative;
-          width: 100%;
-          height: 100%;
-          transition: transform 0.6s;
-          transform-style: preserve-3d;
-          box-shadow: 0 8px 32px rgba(30, 41, 59, 0.08);
-          border-radius: 1.5rem;
-        }
-        .admin-core-card-front,
-        .admin-core-card-back {
-          position: absolute;
-          width: 100%;
-          height: 100%;
-          backface-visibility: hidden;
-          border-radius: 1.5rem;
+          font-family: 'Segoe UI', Arial, sans-serif;
           overflow: hidden;
+          margin-bottom: -10rem;
         }
-        .admin-core-card-front {
-          background: #fff;
+        
+        .dashboard-content {
+          max-width: 600px;
+          margin: 0 auto;
+          padding: 0 24px;
+          transform: translateY(100px);
+          opacity: 0;
+          transition: all 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+          width: 100%;
+          box-sizing: border-box;
+        }
+        
+        .dashboard-heading {
+          font-size: 36px;
+          font-weight: 700;
+          margin-bottom: 48px;
+          transform: translateY(20px);
+          transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.2s;
+        }
+        
+        .cards-container {
           display: flex;
           flex-direction: column;
+          gap: 24px;
+          width: 100%;
+          overflow-x: hidden;
         }
-        .admin-core-card-back {
-          background: #3b82f6;
+        
+        .dashboard-card {
+          display: flex;
+          align-items: center;
+          background: #F3F6FD;
+          border-radius: 12px;
+          padding: 24px;
+          box-shadow: 0 4px 12px rgba(30, 64, 175, 0.08);
+          color: #1E293B;
+          gap: 20px;
+          transition: all 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+          transform: translateX(30px);
+          opacity: 0;
+          max-width: 100%;
+          box-sizing: border-box;
+        }
+        
+        .dashboard-card.pro-card {
+          background: linear-gradient(135deg, #3B4CCA 0%, #1E40AF 100%);
           color: white;
-          transform: rotateY(180deg);
+        }
+        
+        .dashboard-card.pro-card .card-subtitle {
+          color: rgba(255, 255, 255, 0.8);
+        }
+        
+        .card-icon {
+          background: #E0E7FF;
+          border-radius: 10px;
+          width: 64px;
+          height: 64px;
           display: flex;
           align-items: center;
           justify-content: center;
+          transition: all 0.3s ease;
+          flex-shrink: 0;
         }
-        .admin-core-card-img {
-          position: relative;
-          width: 100%;
-          height: 220px;
-          overflow: hidden;
-          background: #f1f5f9;
+        
+        .pro-card .card-icon {
+          background: rgba(255, 255, 255, 0.15);
         }
-        .admin-core-card-content {
-          padding: 1.5rem;
+        
+        .card-content {
           flex: 1;
-          display: flex;
-          flex-direction: column;
-          justify-content: center;
+          min-width: 0;
         }
-        .admin-core-card-title {
-          font-size: 1.5rem;
-          font-weight: 700;
-          color: #1e293b;
-          margin-bottom: 0.5rem;
-        }
-        .admin-core-card-description {
-          font-size: 1rem;
-          color: #64748b;
-        }
-        .admin-core-card-back-content {
-          padding: 2rem;
-          text-align: center;
-        }
-        .admin-core-card-back-title {
-          font-size: 1.5rem;
-          font-weight: 700;
-          margin-bottom: 1rem;
-        }
-        .admin-core-card-back-description {
-          font-size: 1rem;
-          margin-bottom: 1.5rem;
-          opacity: 0.9;
-        }
-        .admin-core-card-button {
-          background: white;
-          color: #3b82f6;
-          border: none;
-          padding: 0.75rem 1.5rem;
-          border-radius: 9999px;
+        
+        .card-title {
           font-weight: 600;
-          cursor: pointer;
-          transition: all 0.2s;
+          font-size: 20px;
+          margin: 0 0 4px 0;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
-        .admin-core-card-button:hover {
-          background: #f8fafc;
-          transform: translateY(-2px);
+        
+        .card-subtitle {
+          font-size: 15px;
+          color: #64748B;
+          margin: 0;
+          line-height: 1.5;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
-        .admin-core-cta {
-          background: #2563eb;
-          color: #fff;
-          font-weight: 600;
-          padding: 1.25rem 2.5rem;
-          border-radius: 9999px;
-          display: inline-flex;
-          align-items: center;
-          gap: 0.5rem;
-          font-size: 1.15rem;
-          border: none;
-          margin-top: 1.5rem;
-          box-shadow: 0 8px 24px rgba(37, 99, 235, 0.13);
-          cursor: pointer;
-          transition: background 0.2s;
+        
+        /* Animation classes */
+        .animate-up .dashboard-content {
+          transform: translateY(0);
+          opacity: 1;
         }
-        .admin-core-cta:hover {
-          background: #1d4ed8;
+        
+        .animate-up .dashboard-heading {
+          transform: translateY(0);
         }
-        @media (max-width: 1200px) {
-          .admin-core-cards {
-            grid-template-columns: repeat(2, 1fr);
-            max-width: 800px;
-          }
+        
+        .dashboard-content,
+        .dashboard-card {
+          will-change: transform, opacity;
         }
+        
+        .dashboard-card {
+          will-change: transform, opacity;
+          transition: transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), 
+                      opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+                      box-shadow 0.3s ease;
+        }
+        
+        .animate-up .dashboard-card {
+          transform: translateX(0);
+          opacity: 1;
+        }
+        
+        .animate-up .dashboard-card:nth-child(1) {
+          transition-delay: 0.3s;
+        }
+        
+        .animate-up .dashboard-card:nth-child(2) {
+          transition-delay: 0.4s;
+        }
+        
+        .animate-up .dashboard-card:nth-child(3) {
+          transition-delay: 0.5s;
+        }
+        
+        .animate-up .dashboard-card:nth-child(4) {
+          transition-delay: 0.6s;
+        }
+        
+        /* Hover effects */
+        .dashboard-card:hover {
+          transform: translateY(-6px) !important;
+          box-shadow: 0 12px 24px rgba(30, 64, 175, 0.15);
+        }
+        
+        .dashboard-card:hover .card-icon {
+          background: #3B4CCA;
+        }
+        
+        .dashboard-card:hover .card-icon svg rect,
+        .dashboard-card:hover .card-icon svg circle,
+        .dashboard-card:hover .card-icon svg path {
+          fill: white;
+          stroke: white;
+        }
+        
+        .pro-card:hover .card-icon {
+          background: rgba(255, 255, 255, 0.3);
+        }
+        
         @media (max-width: 768px) {
-          .admin-core-cards {
-            grid-template-columns: 1fr;
-            max-width: 400px;
+          .dashboard-container {
+            padding: 60px 0;
           }
-          .admin-core-title {
-            font-size: 2rem;
+          
+          .dashboard-heading {
+            font-size: 28px;
+            margin-bottom: 36px;
           }
-          .admin-core-tabs {
-            flex-direction: column;
-            align-items: center;
-            gap: 1rem;
+          
+          .dashboard-card {
+            width: 100% !important;
+            padding: 20px;
+            gap: 16px;
+            max-width: calc(100% - 48px);
           }
-          .admin-core-tab {
-            width: 100%;
-            max-width: 300px;
-            padding: 1rem 1.5rem;
+          
+          .card-icon {
+            width: 56px;
+            height: 56px;
+          }
+        }
+        
+        @media (max-width: 480px) {
+          .dashboard-content {
+            padding: 0 16px;
+          }
+          
+          .dashboard-heading {
+            font-size: 24px;
+          }
+          
+          .dashboard-card {
+            max-width: calc(100% - 32px);
+          }
+          
+          .card-title {
+            font-size: 18px;
+            white-space: normal;
+          }
+          
+          .card-subtitle {
+            font-size: 14px;
+            white-space: normal;
           }
         }
       `}</style>

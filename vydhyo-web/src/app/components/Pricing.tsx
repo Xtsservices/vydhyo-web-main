@@ -1,62 +1,105 @@
 'use client';
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
-const plans = [
+const faqs = [
     {
-        title: "Regular License",
-        price: 35,
-        oldPrice: 55,
-        description:
-            "End users are not charged for. The total price includes the item price and a buyer fee.",
-        features: [
-            { label: "Web Application", included: true },
-            { label: "Mobile Application", included: true },
-            { label: "Lifetime License Validity", included: true },
-            { label: "Permitted for 1 Domain", included: true },
-            {
-                label: "6 Months of Support (Envato Support Policy)",
-                included: true,
-            },
-            { label: "All Features Included", included: true },
-            { label: "Lifetime Free Update", included: true },
-            { label: "For Commercial Projects", included: false },
-            { label: "Priority Support", included: false },
-            { label: "White-label Branding", included: false },
-            { label: "Installation Support", included: false },
-        ],
-        button: "Choose Plan",
+        title: "Get Started Today",
+        description: "Simply download the VYDYO app, create an account, and tap 'Book a Doctor.' Search by specialty, location, or availability, then select your preferred doctor and time slot. You'll receive instant confirmation with all visit details.",
+        button: "Download App",
         highlight: false,
     },
     {
-        title: "Extended License",
-        price: 499,
-        oldPrice: 650,
-        description:
-            "End users are not charged for. The total price includes the item price and a buyer fee.",
-        features: [
-            { label: "Web Application", included: true },
-            { label: "Mobile Application", included: true },
-            { label: "Lifetime License Validity", included: true },
-            { label: "Permitted for 1 Domain", included: true },
-            {
-                label: "6 Months of Support (Envato Support Policy)",
-                included: true,
-            },
-            { label: "All Features Included", included: true },
-            { label: "Lifetime Free Update", included: true },
-            { label: "For Commercial Projects", included: true },
-            { label: "Priority Support", included: true },
-            { label: "White-label Branding", included: true },
-            { label: "Installation Support", included: false },
-        ],
-        button: "Choose Plan",
+        title: "Is my medical information secure?",
+        description: "Yes, VYDYO uses bank-grade encryption and is ISO/IEC 27001 certified. We comply with all Indian healthcare data protection regulations and follow HIPAA guidelines. Your data is never shared with third parties without your explicit consent.",
+        button: "Learn More",
         highlight: true,
-        highlightText: "Most Popular 🔥",
+        highlightText: "Most Secure 🔒",
+    },
+    {
+        title: "How quickly can I get an ambulance?",
+        description: "Our ambulance service connects you to the nearest available vehicle, typically arriving within minutes. You can track the ambulance in real-time through the app and all nearby hospitals are automatically notified of incoming emergencies.",
+        button: "Emergency Help",
+        highlight: false,
     },
 ];
 
 const Pricing: React.FC = () => {
     const [hoveredButton, setHoveredButton] = useState<number | null>(null);
+    const leftCardRef = useRef<HTMLDivElement>(null);
+    const rightCardRef = useRef<HTMLDivElement>(null);
+    const centerCardRef = useRef<HTMLDivElement>(null);
+    
+    // Track whether elements are in view to manage animations
+    const [isLeftInView, setIsLeftInView] = useState(false);
+    const [isRightInView, setIsRightInView] = useState(false);
+    const [isCenterInView, setIsCenterInView] = useState(false);
+
+    useEffect(() => {
+        // Function to reset animations when elements leave viewport
+        const handleScroll = () => {
+            if (leftCardRef.current) {
+                const rect = leftCardRef.current.getBoundingClientRect();
+                const isVisible = 
+                    rect.top < window.innerHeight && 
+                    rect.bottom > 0;
+                
+                if (!isVisible && isLeftInView) {
+                    leftCardRef.current.style.transform = "translateX(-50px)";
+                    leftCardRef.current.style.opacity = "0";
+                    setIsLeftInView(false);
+                } else if (isVisible && !isLeftInView) {
+                    leftCardRef.current.style.transform = "translateX(0)";
+                    leftCardRef.current.style.opacity = "1";
+                    setIsLeftInView(true);
+                }
+            }
+            
+            if (rightCardRef.current) {
+                const rect = rightCardRef.current.getBoundingClientRect();
+                const isVisible = 
+                    rect.top < window.innerHeight && 
+                    rect.bottom > 0;
+                
+                if (!isVisible && isRightInView) {
+                    rightCardRef.current.style.transform = "translateX(50px)";
+                    rightCardRef.current.style.opacity = "0";
+                    setIsRightInView(false);
+                } else if (isVisible && !isRightInView) {
+                    rightCardRef.current.style.transform = "translateX(0)";
+                    rightCardRef.current.style.opacity = "1";
+                    setIsRightInView(true);
+                }
+            }
+            
+            if (centerCardRef.current) {
+                const rect = centerCardRef.current.getBoundingClientRect();
+                const isVisible = 
+                    rect.top < window.innerHeight && 
+                    rect.bottom > 0;
+                
+                if (!isVisible && isCenterInView) {
+                    centerCardRef.current.style.transform = "translateY(50px)";
+                    centerCardRef.current.style.opacity = "0";
+                    setIsCenterInView(false);
+                } else if (isVisible && !isCenterInView) {
+                    centerCardRef.current.style.transform = "translateY(0)";
+                    centerCardRef.current.style.opacity = "1";
+                    setIsCenterInView(true);
+                }
+            }
+        };
+
+        // Initial check on mount
+        handleScroll();
+        
+        // Add scroll event listener
+        window.addEventListener('scroll', handleScroll);
+        
+        // Clean up
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+        };
+    }, [isLeftInView, isRightInView, isCenterInView]);
 
     return (
         <div className="pricing-container">
@@ -76,101 +119,96 @@ const Pricing: React.FC = () => {
                             fill="#3b82f6"
                         />
                     </svg>
-                    Pricing
+                    Quick Answers
                 </span>
                 <h2 className="pricing-title">
-                    Pricing that's simple, predictable, and built to scale
+                    Frequently Asked Questions
                 </h2>
             </div>
             <div className="plans-container">
-                {plans.map((plan, idx) => (
-                    <div
-                        key={plan.price}
-                        className={`plan-card ${plan.highlight ? 'highlighted' : ''}`}
+                <div
+                    ref={leftCardRef}
+                    className="plan-card"
+                    style={{
+                        transform: "translateX(-50px)",
+                        opacity: 0,
+                        transition: "transform 0.6s ease-out, opacity 0.6s ease-out",
+                    }}
+                >
+                    <div className="plan-title">{faqs[0].title}</div>
+                    <div className="plan-description">{faqs[0].description}</div>
+                    <button
+                        className={`plan-button ${hoveredButton === 0 ? 'hovered' : ''}`}
+                        onMouseEnter={() => setHoveredButton(0)}
+                        onMouseLeave={() => setHoveredButton(null)}
                     >
-                        {plan.highlight && (
-                            <div className="highlight-badge">{plan.highlightText}</div>
-                        )}
-                        <div className="plan-title">{plan.title}</div>
-                        <div className="price-container">
-                            <span className="price">${plan.price}</span>
-                            <span className="old-price">${plan.oldPrice}</span>
-                        </div>
-                        <div className="plan-description">{plan.description}</div>
-                        <div className="features-title">What's Included</div>
-                        <ul className="features-list">
-                            {plan.features.map((f, i) => (
-                                <li key={f.label} className={`feature-item ${f.included ? 'included' : 'excluded'}`}>
-                                    <span className="feature-icon">
-                                        {f.included ? (
-                                            <svg
-                                                width="18"
-                                                height="18"
-                                                fill="none"
-                                                xmlns="http://www.w3.org/2000/svg"
-                                            >
-                                                <circle cx="9" cy="9" r="9" fill="#d1fae5" />
-                                                <path
-                                                    d="M6.5 9.5l2 2 3-3"
-                                                    stroke="#059669"
-                                                    strokeWidth="1.5"
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                />
-                                            </svg>
-                                        ) : (
-                                            <svg
-                                                width="18"
-                                                height="18"
-                                                fill="none"
-                                                xmlns="http://www.w3.org/2000/svg"
-                                            >
-                                                <circle cx="9" cy="9" r="9" fill="#fee2e2" />
-                                                <path
-                                                    d="M6.5 11.5l5-5M11.5 11.5l-5-5"
-                                                    stroke="#ef4444"
-                                                    strokeWidth="1.5"
-                                                    strokeLinecap="round"
-                                                />
-                                            </svg>
-                                        )}
-                                    </span>
-                                    <span className="feature-label">{f.label}</span>
-                                </li>
-                            ))}
-                        </ul>
-                        <button
-                            className={`plan-button ${hoveredButton === idx ? 'hovered' : ''}`}
-                            onMouseEnter={() => setHoveredButton(idx)}
-                            onMouseLeave={() => setHoveredButton(null)}
-                        >
-                            {plan.button} <span className="button-arrow">→</span>
-                        </button>
-                    </div>
-                ))}
+                        {faqs[0].button} <span className="button-arrow">→</span>
+                    </button>
+                </div>
+
+                <div
+                    ref={centerCardRef}
+                    className="plan-card highlighted"
+                    style={{
+                        transform: "translateY(50px)",
+                        opacity: 0,
+                        transition: "transform 0.6s ease-out, opacity 0.6s ease-out",
+                    }}
+                >
+                    {faqs[1].highlight && <div className="highlight-badge">{faqs[1].highlightText}</div>}
+                    <div className="plan-title">{faqs[1].title}</div>
+                    <div className="plan-description">{faqs[1].description}</div>
+                    <button
+                        className={`plan-button ${hoveredButton === 1 ? 'hovered' : ''}`}
+                        onMouseEnter={() => setHoveredButton(1)}
+                        onMouseLeave={() => setHoveredButton(null)}
+                    >
+                        {faqs[1].button} <span className="button-arrow">→</span>
+                    </button>
+                </div>
+
+                <div
+                    ref={rightCardRef}
+                    className="plan-card"
+                    style={{
+                        transform: "translateX(50px)",
+                        opacity: 0,
+                        transition: "transform 0.6s ease-out, opacity 0.6s ease-out",
+                    }}
+                >
+                    <div className="plan-title">{faqs[2].title}</div>
+                    <div className="plan-description">{faqs[2].description}</div>
+                    <button
+                        className={`plan-button ${hoveredButton === 2 ? 'hovered' : ''}`}
+                        onMouseEnter={() => setHoveredButton(2)}
+                        onMouseLeave={() => setHoveredButton(null)}
+                    >
+                        {faqs[2].button} <span className="button-arrow">→</span>
+                    </button>
+                </div>
             </div>
             <div className="clients-section">
-                <div className="clients-title">Invest in Your Healthcare Template</div>
+                <div className="clients-title">Join Thousands of Healthcare Providers</div>
                 <div className="clients-badge">
                     <span className="client-avatars">
                         <img
-                            src="https://randomuser.me/api/portraits/men/32.jpg"
+                            src="/api/placeholder/32/32"
                             alt="user1"
                             className="client-avatar"
                         />
                         <img
-                            src="https://randomuser.me/api/portraits/women/44.jpg"
+                            src="/api/placeholder/32/32"
                             alt="user2"
                             className="client-avatar"
                         />
                         <img
-                            src="https://randomuser.me/api/portraits/men/45.jpg"
+                            src="/api/placeholder/32/32"
                             alt="user3"
                             className="client-avatar"
                         />
                     </span>
-                    300K Happy Clients use
-                    <span className="brand-name">Doccure templates</span>
+                    10,000+ Doctors trust
+                    <span className="brand-name">Vydhyo</span>
                 </div>
             </div>
             <div className="spacer" />
@@ -179,7 +217,7 @@ const Pricing: React.FC = () => {
                 .pricing-container {
                     min-height: 100vh;
                     background: #fff;
-                    font-family: Inter, sans-serif;
+                    font-family: 'Inter', sans-serif;
                     padding: 0;
                     margin: 0;
                 }
@@ -212,10 +250,14 @@ const Pricing: React.FC = () => {
                 
                 .pricing-title {
                     font-weight: 700;
-                    font-size: 24px;
+                    font-size: 32px;
                     margin: 0;
                     color: #222;
                     letter-spacing: -0.01em;
+                    background: linear-gradient(90deg, #0a1f44 0%, #1a3d8d 100%);
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                    margin-bottom: 20px;
                 }
                 
                 .plans-container {
@@ -224,22 +266,38 @@ const Pricing: React.FC = () => {
                     gap: 32px;
                     margin-top: 32px;
                     margin-bottom: 32px;
+                    padding: 0 20px;
                 }
                 
                 .plan-card {
                     background: #f4f8ff;
-                    border-radius: 12px;
-                    box-shadow: 0 2px 8px 0 rgba(59,130,246,0.06);
+                    border-radius: 16px;
+                    box-shadow: 0 4px 24px rgba(59,130,246,0.1);
                     border: 1px solid #e5e7eb;
-                    min-width: 340px;
+                    width: 100%;
                     max-width: 360px;
-                    padding: 28px 28px 24px 28px;
+                    padding: 28px;
                     position: relative;
                     transition: all 0.3s ease;
                 }
                 
+                .plan-card:hover {
+                    background: linear-gradient(135deg, rgba(10,31,68,0.9) 0%, rgba(26,61,141,0.9) 100%);
+                    color: #fff;
+                    transform: translateY(-5px) !important;
+                }
+                
+                .plan-card:hover .plan-title,
+                .plan-card:hover .price,
+                .plan-card:hover .old-price,
+                .plan-card:hover .plan-description,
+                .plan-card:hover .features-title,
+                .plan-card:hover .feature-label {
+                    color: #fff !important;
+                }
+                
                 .plan-card.highlighted {
-                    box-shadow: 0 8px 32px 0 rgba(59,130,246,0.10);
+                    box-shadow: 0 8px 32px 0 rgba(59,130,246,0.2);
                     border: 2px solid #3b82f6;
                     transform: scale(1.04);
                 }
@@ -258,8 +316,9 @@ const Pricing: React.FC = () => {
                 
                 .plan-title {
                     font-weight: 600;
-                    font-size: 16px;
+                    font-size: 20px;
                     color: #222;
+                    margin-bottom: 8px;
                 }
                 
                 .price-container {
@@ -270,7 +329,7 @@ const Pricing: React.FC = () => {
                 
                 .price {
                     font-weight: 700;
-                    font-size: 36px;
+                    font-size: 42px;
                     color: #222;
                     margin-top: 8px;
                     margin-bottom: 8px;
@@ -290,12 +349,14 @@ const Pricing: React.FC = () => {
                     font-size: 14px;
                     margin-bottom: 18px;
                     margin-top: 2px;
+                    line-height: 1.6;
                 }
                 
                 .features-title {
                     font-weight: 600;
-                    font-size: 15px;
-                    margin-bottom: 10px;
+                    font-size: 16px;
+                    margin-bottom: 12px;
+                    color: #222;
                 }
                 
                 .features-list {
@@ -308,7 +369,7 @@ const Pricing: React.FC = () => {
                     display: flex;
                     align-items: center;
                     font-size: 14px;
-                    margin-bottom: 8px;
+                    margin-bottom: 10px;
                     transition: color 0.2s;
                 }
                 
@@ -336,40 +397,54 @@ const Pricing: React.FC = () => {
                 }
                 
                 .plan-button {
-                    margin-top: 18px;
+                    margin-top: 24px;
                     width: 100%;
                     background: linear-gradient(90deg, #3b82f6 0%, #06b6d4 100%);
                     color: #fff;
                     font-weight: 600;
-                    font-size: 15px;
+                    font-size: 16px;
                     border: none;
-                    border-radius: 24px;
-                    padding: 12px 0;
+                    border-radius: 8px;
+                    padding: 14px 0;
                     cursor: pointer;
-                    box-shadow: 0 2px 8px 0 rgba(59,130,246,0.10);
-                    transition: all 0.2s ease;
+                    box-shadow: 0 4px 12px rgba(59,130,246,0.2);
+                    transition: all 0.3s ease;
                     outline: none;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 8px;
                 }
                 
                 .plan-button.hovered {
                     background: linear-gradient(90deg, #2563eb 0%, #0ea5e9 100%);
+                    transform: translateY(-2px);
+                    box-shadow: 0 6px 16px rgba(59,130,246,0.3);
                 }
                 
                 .button-arrow {
                     font-size: 18px;
+                    transition: transform 0.2s;
+                }
+                
+                .plan-button.hovered .button-arrow {
+                    transform: translateX(4px);
                 }
                 
                 .clients-section {
                     text-align: center;
-                    margin-top: 32px;
+                    margin-top: 48px;
                 }
                 
                 .clients-title {
                     font-weight: 700;
-                    font-size: 22px;
+                    font-size: 28px;
                     color: #222;
-                    margin-bottom: 8px;
+                    margin-bottom: 16px;
                     letter-spacing: -0.01em;
+                    background: linear-gradient(90deg, #0a1f44 0%, #1a3d8d 100%);
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
                 }
                 
                 .clients-badge {
@@ -377,9 +452,9 @@ const Pricing: React.FC = () => {
                     align-items: center;
                     gap: 8px;
                     background: #f4f8ff;
-                    border-radius: 20px;
-                    padding: 6px 18px;
-                    font-size: 15px;
+                    border-radius: 24px;
+                    padding: 8px 20px;
+                    font-size: 16px;
                     color: #6b7280;
                     font-weight: 500;
                 }
@@ -389,8 +464,8 @@ const Pricing: React.FC = () => {
                 }
                 
                 .client-avatar {
-                    width: 28px;
-                    height: 28px;
+                    width: 32px;
+                    height: 32px;
                     border-radius: 50%;
                     border: 2px solid #fff;
                     margin-left: 0;
@@ -404,7 +479,7 @@ const Pricing: React.FC = () => {
                     margin-left: 4px;
                 }
                 
-                @media (max-width: 768px) {
+                @media (max-width: 1024px) {
                     .plans-container {
                         flex-direction: column;
                         align-items: center;
@@ -412,7 +487,7 @@ const Pricing: React.FC = () => {
                     }
                     
                     .plan-card {
-                        min-width: 300px;
+                        max-width: 400px;
                     }
                     
                     .plan-card.highlighted {
@@ -420,12 +495,22 @@ const Pricing: React.FC = () => {
                     }
                     
                     .pricing-title {
-                        font-size: 20px;
+                        font-size: 28px;
                         padding: 0 16px;
                     }
                     
                     .clients-title {
-                        font-size: 18px;
+                        font-size: 24px;
+                    }
+                }
+                
+                @media (max-width: 768px) {
+                    .pricing-title {
+                        font-size: 24px;
+                    }
+                    
+                    .clients-title {
+                        font-size: 20px;
                     }
                     
                     .clients-badge {

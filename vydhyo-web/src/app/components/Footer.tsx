@@ -1,77 +1,182 @@
 'use client';
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 const Footer: React.FC = () => {
+  const [isMobile, setIsMobile] = useState(false);
+  const [activeAccordion, setActiveAccordion] = useState<string | null>(null);
+  const footerContentRef = useRef<HTMLDivElement>(null);
+
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  const toggleAccordion = (section: string) => {
+    setActiveAccordion(activeAccordion === section ? null : section);
+  };
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+
+    handleResize();
+    window.addEventListener("resize", handleResize);
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('animate-up');
+          }
+        });
+      },
+      { threshold: 0.1 }
+    );
+
+    if (footerContentRef.current) {
+      observer.observe(footerContentRef.current);
+    }
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      if (footerContentRef.current) {
+        observer.unobserve(footerContentRef.current);
+      }
+    };
+  }, []);
+
+  const sections = [
+    {
+      id: "quick-links",
+      title: "Quick Links",
+      links: [
+        { name: "About VYDYO", url: "#" },
+        { name: "Book a Doctor", url: "#" },
+        { name: "Partner with Us", url: "#" },
+        { name: "Careers", url: "#" },
+        { name: "Blog", url: "#" },
+        { name: "FAQs", url: "#" }
+      ]
+    },
+    {
+      id: "cities",
+      title: "Cities We Serve",
+      links: [
+        { name: "Nizamabad", url: "#" },
+        { name: "Warangal", url: "#" },
+        { name: "Karimnagar", url: "#" }
+      ]
+    },
+    {
+      id: "hospitals",
+      title: "For Hospitals & Clinics",
+      links: [
+        { name: "Get Listed", url: "#" },
+        { name: "Hospital Dashboard", url: "#" },
+        { name: "Referral Program", url: "#" },
+        { name: "VYDYO Pro Access", url: "#" }
+      ]
+    },
+    {
+      id: "policies",
+      title: "Policies",
+      links: [
+        { name: "Patient Rights", url: "#" },
+        { name: "Quality Policy", url: "#" },
+        { name: "Report Abuse", url: "#" },
+        { name: "Trust & Transparency", url: "#" }
+      ]
+    }
+  ];
+
   return (
     <footer className="footer-container">
-      <div className="footer-content">
-        {/* Top icons */}
-        <div className="footer-icons">
-          <div className="icon-item">
-            <div className="icon-circle" style={{ background: "#ff7f50" }}>
-              <span role="img" aria-label="Elite Author" className="icon-emoji">
-                📦
-              </span>
-            </div>
-            <div className="icon-label">Elite Author</div>
-          </div>
-          <div className="icon-item">
-            <div className="icon-circle" style={{ background: "#00bfff" }}>
-              <span role="img" aria-label="Trendsetter" className="icon-emoji">
-                ⚡
-              </span>
-            </div>
-            <div className="icon-label">Trendsetter</div>
-          </div>
-          <div className="icon-item">
-            <div className="icon-circle" style={{ background: "#ff4d4f" }}>
-              <span role="img" aria-label="Author Level" className="icon-emoji">
-                🐾
-              </span>
-            </div>
-            <div className="icon-label">Author Level</div>
-          </div>
-        </div>
-
-        {/* Main text */}
+      <div className="footer-content" ref={footerContentRef}>
         <h2 className="footer-heading">
-          Build Your Doctor Online Appointment <br />
-          Booking Website with Doccure
+          VYDYO – Connect. Care. Cure.
         </h2>
 
-        {/* Envato & Purchase */}
-        <div className="footer-purchase">
-          <span className="purchase-label">Available in</span>
-          <img
-            src="https://cdn.envato.com/files/295834682/envato-logo.png"
-            alt="envato"
-            className="envato-logo"
-          />
-          <a href="#" className="purchase-button">
-            &#128722; Purchase Now
+        {isMobile ? (
+          <div className="accordion-container">
+            {sections.map((section) => (
+              <div key={section.id} className="accordion-section">
+                <button 
+                  className="accordion-header"
+                  onClick={() => toggleAccordion(section.id)}
+                  aria-expanded={activeAccordion === section.id}
+                >
+                  <h3 className="links-heading">{section.title}</h3>
+                  <svg 
+                    className="accordion-icon" 
+                    viewBox="0 0 24 24"
+                    style={{
+                      transform: activeAccordion === section.id ? "rotate(180deg)" : "rotate(0deg)"
+                    }}
+                  >
+                    <path d="M7 10l5 5 5-5z" fill="currentColor" />
+                  </svg>
+                </button>
+                <div 
+                  className="accordion-content"
+                  style={{
+                    maxHeight: activeAccordion === section.id ? "500px" : "0"
+                  }}
+                >
+                  {section.links.map((link) => (
+                    <a key={link.name} href={link.url} className="footer-link">
+                      {link.name}
+                    </a>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="footer-links-grid">
+            {sections.map((section) => (
+              <div key={section.id} className="links-column">
+                <h3 className="links-heading">{section.title}</h3>
+                {section.links.map((link) => (
+                  <a key={link.name} href={link.url} className="footer-link">
+                    {link.name}
+                  </a>
+                ))}
+              </div>
+            ))}
+          </div>
+        )}
+
+        <div className="privacy-section">
+          <h3 className="privacy-heading">Data Privacy & Security You Can Trust</h3>
+          <p className="privacy-text">
+            We protect your health data with bank-grade, end-to-end encryption and comply with HIPAA and Indian regulations.
+          </p>
+          <div className="privacy-features">
+            <div className="privacy-feature">
+              <span className="privacy-check">✅</span>
+              <span>No third-party data sharing</span>
+            </div>
+            <div className="privacy-feature">
+              <span className="privacy-check">✅</span>
+              <span>You own and control your data</span>
+            </div>
+            <div className="privacy-feature">
+              <span className="privacy-check">✅</span>
+              <span>ISO/IEC 27001 certified</span>
+            </div>
+          </div>
+          <a href="#" className="privacy-policy-link">
+            🔒 Read our full Privacy Policy
           </a>
         </div>
       </div>
 
-      {/* Copyright and links */}
       <div className="footer-bottom">
         <div className="copyright">
-          © Copyright 2025 Doccure. All rights reserved.
-        </div>
-        <div className="footer-links">
-          <a href="#" className="footer-link">Term of use</a>
-          <a href="#" className="footer-link">License</a>
-          <a href="#" className="footer-link">Refund Policy</a>
-          <a href="#" className="footer-link">Regular License</a>
-          <a href="#" className="footer-link">Extended License</a>
+          © 2025 VYDYO HealthTech Pvt Ltd. All rights reserved.
         </div>
       </div>
 
-      {/* Floating buttons */}
       <button 
         className="scroll-top-button"
         onClick={scrollToTop}
@@ -98,7 +203,7 @@ const Footer: React.FC = () => {
           </svg>
         </a>
         <a
-          href="mailto:support@example.com"
+          href="mailto:support@vydhyo.com"
           className="social-button email"
         >
           <svg width="22" height="22" fill="white" viewBox="0 0 24 24">
@@ -130,118 +235,180 @@ const Footer: React.FC = () => {
           </svg>
           <span className="notification-badge">1</span>
         </div>
-        <span className="whatsapp-label">We Are Here!</span>
+        <span className="whatsapp-label">Need Help?</span>
       </div>
 
       <style jsx>{`
         .footer-container {
           background: #011126;
           color: #fff;
-          border-radius: 15px;
-          margin: 16px;
-          padding: 0;
+          padding: 60px 20px 20px;
           position: relative;
           overflow: hidden;
         }
         
         .footer-content {
-          min-height: 350px;
+          max-width: 1200px;
+          margin: 0 auto;
           display: flex;
           flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          position: relative;
+          transform: translateY(100px);
+          opacity: 0;
+          transition: all 0.8s ease-out;
         }
         
-        .footer-icons {
-          display: flex;
-          gap: 40px;
-          margin-bottom: 16px;
-        }
-        
-        .icon-item {
-          text-align: center;
-        }
-        
-        .icon-circle {
-          border-radius: 50%;
-          width: 40px;
-          height: 40px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          margin: 0 auto 4px auto;
-        }
-        
-        .icon-emoji {
-          font-size: 22px;
-        }
-        
-        .icon-label {
-          font-size: 12px;
+        .footer-content.animate-up {
+          transform: translateY(0);
+          opacity: 1;
         }
         
         .footer-heading {
           font-weight: 700;
           font-size: 32px;
-          margin: 0;
+          margin: 0 0 40px;
           text-align: center;
+          transform: translateY(20px);
+          transition: transform 0.6s ease-out 0.2s;
         }
         
-        .footer-purchase {
-          margin-top: 24px;
+        .animate-up .footer-heading {
+          transform: translateY(0);
+        }
+        
+        /* Desktop Layout */
+        .footer-links-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+          gap: 30px;
+          margin-bottom: 40px;
+          transform: translateY(20px);
+          transition: transform 0.6s ease-out 0.3s;
+        }
+        
+        .animate-up .footer-links-grid {
+          transform: translateY(0);
+        }
+        
+        .links-column {
           display: flex;
+          flex-direction: column;
+        }
+        
+        /* Mobile Accordion */
+        .accordion-container {
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+          margin-bottom: 30px;
+        }
+        
+        .accordion-section {
+          border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .accordion-header {
+          width: 100%;
+          display: flex;
+          justify-content: space-between;
           align-items: center;
-          gap: 12px;
+          padding: 15px 0;
+          background: none;
+          border: none;
+          color: white;
+          cursor: pointer;
         }
         
-        .purchase-label {
-          font-size: 14px;
+        .accordion-icon {
+          width: 20px;
+          height: 20px;
+          transition: transform 0.3s ease;
         }
         
-        .envato-logo {
-          height: 18px;
-          margin-right: 4px;
-        }
-        
-        .purchase-button {
-          background: #009cff;
-          color: #fff;
-          border-radius: 18px;
-          padding: 7px 22px;
-          font-weight: 600;
-          font-size: 14px;
-          text-decoration: none;
-          margin-left: 8px;
-          transition: background 0.2s;
-        }
-        
-        .purchase-button:hover {
-          background: #007acc;
-        }
-        
-        .footer-bottom {
-          border-top: 1px solid #22304a;
-          padding: 18px 0 8px 0;
-          text-align: center;
-          font-size: 13px;
-          background: rgba(1,17,38,0.98);
-        }
-        
-        .copyright {
-          margin-bottom: 6px;
-        }
-        
-        .footer-links {
+        .accordion-content {
+          overflow: hidden;
+          transition: max-height 0.3s ease;
           display: flex;
-          justify-content: center;
-          gap: 18px;
-          flex-wrap: wrap;
+          flex-direction: column;
+          gap: 10px;
+          padding-left: 10px;
+        }
+        
+        .links-heading {
+          font-size: 18px;
+          margin-bottom: 15px;
+          color: #009cff;
         }
         
         .footer-link {
           color: #fff;
-          text-decoration: underline;
+          margin-bottom: 10px;
+          font-size: 14px;
+          text-decoration: none;
+          transition: color 0.2s;
+          display: block;
+          padding: 8px 0;
+        }
+        
+        .footer-link:hover {
+          color: #009cff;
+        }
+        
+        .privacy-section {
+          background: rgba(0, 156, 255, 0.1);
+          border-radius: 10px;
+          padding: 20px;
+          margin-bottom: 40px;
+          transform: translateY(20px);
+          transition: transform 0.6s ease-out 0.4s;
+        }
+        
+        .animate-up .privacy-section {
+          transform: translateY(0);
+        }
+        
+        .privacy-heading {
+          font-size: 20px;
+          margin-bottom: 15px;
+          color: #009cff;
+        }
+        
+        .privacy-text {
+          font-size: 14px;
+          margin-bottom: 15px;
+          line-height: 1.6;
+        }
+        
+        .privacy-features {
+          display: flex;
+          flex-direction: column;
+          gap: 10px;
+          margin-bottom: 15px;
+        }
+        
+        .privacy-feature {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          font-size: 14px;
+        }
+        
+        .privacy-check {
+          font-size: 16px;
+        }
+        
+        .privacy-policy-link {
+          color: #009cff;
+          font-size: 14px;
+          text-decoration: none;
+          display: inline-flex;
+          align-items: center;
+          gap: 5px;
+        }
+        
+        .footer-bottom {
+          border-top: 1px solid #22304a;
+          padding: 20px 0;
+          text-align: center;
           font-size: 13px;
         }
         
@@ -349,24 +516,6 @@ const Footer: React.FC = () => {
         @media (max-width: 768px) {
           .footer-heading {
             font-size: 24px;
-            padding: 0 16px;
-          }
-          
-          .footer-icons {
-            gap: 24px;
-          }
-          
-          .footer-purchase {
-            flex-direction: column;
-            gap: 8px;
-          }
-          
-          .purchase-button {
-            margin-left: 0;
-          }
-          
-          .footer-links {
-            gap: 12px;
           }
           
           .social-buttons {

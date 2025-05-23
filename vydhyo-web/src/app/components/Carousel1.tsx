@@ -1,30 +1,31 @@
-'use client'; // Ensures client-side rendering in Next.js App Router
+'use client';
 
 import React from 'react';
 
-// Feature items
+// Feature items for Vydhyo Doctor App
 const features = [
-  { icon: '📱', label: 'Ultra Responsive' },
-  { icon: '🌐', label: 'Doctors & Patient Dashboards' },
-  { icon: '⚙️', label: 'High Quality Code Standards' },
-  { icon: '🅱️', label: 'Based on Bootstrap' },
-  { icon: '📅', label: 'Booking Systems' },
-  { icon: '🧼', label: 'Clean & Modern Design' },
-  { icon: '🎨', label: 'Figma Files Included' },
+  { icon: '👨‍⚕️', label: 'Doctor Profiles' },
+  { icon: '📅', label: 'Appointment Scheduling' },
+  { icon: '💊', label: 'Prescription Management' },
+  { icon: '🏥', label: 'Clinic Management' },
+  { icon: '📱', label: 'Telemedicine Support' },
+  { icon: '📊', label: 'Patient Analytics' },
+  { icon: '🔒', label: 'Secure Messaging' },
+  { icon: '💰', label: 'Billing & Payments' },
+  { icon: '🔄', label: 'Seamless Sync' },
+  { icon: '📝', label: 'Electronic Health Records' },
 ];
 
-const ScrollingFeaturePills = () => {
+const Carousel1 = () => {
   return (
     <div style={containerStyle}>
       {/* Embedded keyframes for SSR compatibility */}
-      <style>
-        {`
-          @keyframes scroll {
-            0% { transform: translateX(0); }
-            100% { transform: translateX(-50%); }
-          }
-        `}
-      </style>
+      <style jsx>{`
+        @keyframes scroll {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(calc(-50% - 0.5rem)); }
+        }
+      `}</style>
 
       <div style={scrollWrapperStyle}>
         <div style={scrollContentStyle}>
@@ -43,26 +44,34 @@ const ScrollingFeaturePills = () => {
 // === Inline Styles ===
 
 const containerStyle: React.CSSProperties = {
-  backgroundColor: '#0f172a', // Navy background
+  backgroundColor: '#0f172a',
   overflow: 'hidden',
   padding: '1.5rem 0',
+  width: '100%',
+  position: 'relative',
+  zIndex: 2,
+  marginTop: '-6rem',
 };
 
 const scrollWrapperStyle: React.CSSProperties = {
   display: 'flex',
-  whiteSpace: 'nowrap',
+  width: '100%',
+  overflow: 'hidden',
+  marginTop: '-1rem',
+  marginBottom: '-1rem',
 };
 
 const scrollContentStyle: React.CSSProperties = {
-  display: 'inline-flex',
+  display: 'flex',
   animation: 'scroll 30s linear infinite',
+  willChange: 'transform',
 };
 
 const pillStyle: React.CSSProperties = {
   display: 'inline-flex',
   alignItems: 'center',
   gap: '0.5rem',
-  backgroundColor: '#334155', // Gray pill
+  backgroundColor: '#334155',
   color: '#ffffff',
   padding: '0.5rem 1rem',
   margin: '0 0.5rem',
@@ -70,10 +79,11 @@ const pillStyle: React.CSSProperties = {
   fontWeight: 500,
   fontSize: '0.95rem',
   whiteSpace: 'nowrap',
+  flexShrink: 0,
 };
 
 const iconStyle: React.CSSProperties = {
   fontSize: '1.1rem',
 };
 
-export default ScrollingFeaturePills;
+export default Carousel1;
