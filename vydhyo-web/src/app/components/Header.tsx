@@ -398,6 +398,7 @@ const searchFormStyle: React.CSSProperties = {
   display: "flex",
   alignItems: "center",
   width: "100%",
+  
 };
 
 const searchInputStyle: React.CSSProperties = {
@@ -407,6 +408,7 @@ const searchInputStyle: React.CSSProperties = {
   borderRadius: "9999px 0 0 9999px",
   outline: "none",
   fontSize: "1rem",
+  
 };
 
 const searchButtonStyle: React.CSSProperties = {
@@ -457,12 +459,15 @@ const mobileSearchContainerStyle: React.CSSProperties = {
   width: "100%",
   marginBottom: "1.5rem",
   position: "relative",
+  
+  marginRight: "-5rem",
 };
 
 const mobileSearchFormStyle: React.CSSProperties = {
   display: "flex",
   alignItems: "center",
   width: "100%",
+  marginRight: "-5rem",
 };
 
 const mobileSearchInputStyle: React.CSSProperties = {
@@ -481,6 +486,7 @@ const mobileSearchButtonStyle: React.CSSProperties = {
   border: "none",
   borderRadius: "0 9999px 9999px 0",
   cursor: "pointer",
+  marginRight: "5rem",
 };
 
 const mobileSuggestionsContainerStyle: React.CSSProperties = {
