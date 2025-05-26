@@ -1,14 +1,27 @@
-
 "use client";
-
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useRouter } from "next/navigation";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
   const [isVisible, setIsVisible] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [filteredSuggestions, setFilteredSuggestions] = useState<string[]>([]);
+  const searchRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
+
+  // Search suggestions data
+  const searchSuggestions = [
+    "dr-karthik-vallala",
+    "cardio-thoracic-surgeon",
+    "heart-surgery",
+    "cardiac-specialist",
+    "thoracic-surgery"
+  ];
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
@@ -43,16 +56,38 @@ const Header = () => {
       }
     };
 
+    const handleClickOutside = (event: MouseEvent) => {
+      if (searchRef.current && !searchRef.current.contains(event.target as Node)) {
+        setShowSuggestions(false);
+      }
+    };
+
     handleResize();
     window.addEventListener("resize", handleResize);
     window.addEventListener("scroll", handleScroll);
+    document.addEventListener("mousedown", handleClickOutside);
     
     return () => {
       clearTimeout(appearanceTimer);
       window.removeEventListener("resize", handleResize);
       window.removeEventListener("scroll", handleScroll);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  // Filter suggestions based on search query
+  useEffect(() => {
+    if (searchQuery.trim()) {
+      const filtered = searchSuggestions.filter(suggestion =>
+        suggestion.toLowerCase().includes(searchQuery.toLowerCase())
+      );
+      setFilteredSuggestions(filtered);
+      setShowSuggestions(true);
+    } else {
+      setFilteredSuggestions(searchSuggestions);
+      setShowSuggestions(false);
+    }
+  }, [searchQuery]);
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
@@ -68,6 +103,53 @@ const Header = () => {
     }
     setIsMenuOpen(false);
   };
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      performSearch(searchQuery);
+    }
+  };
+
+  const performSearch = (query: string) => {
+  // Navigate to the doctor profile page - Fix the routing path
+  if (query.toLowerCase().includes("dr-karthik-vallala") || query.toLowerCase().includes("karthik")) {
+    // This should match your actual file name in the pages directory
+    router.push("/dr-karthik-vallala-cardio-thoracic-surgeon");
+  } else {
+    // For other searches, you can implement different logic
+    console.log("Searching for:", query);
+    // You could navigate to a general search results page
+    // router.push(`/search?q=${encodeURIComponent(query)}`);
+  }
+  
+  setSearchQuery("");
+  setShowSuggestions(false);
+};
+
+  const handleSuggestionClick = (suggestion: string) => {
+    setSearchQuery(suggestion);
+    setShowSuggestions(false);
+    performSearch(suggestion);
+  };
+
+  const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+  };
+
+  const handleSearchInputFocus = () => {
+    if (filteredSuggestions.length > 0 || searchQuery.trim()) {
+      setShowSuggestions(true);
+    } else {
+      setFilteredSuggestions(searchSuggestions);
+      setShowSuggestions(true);
+    }
+  };
+
+  const navigateToDoctorProfile = () => {
+  // Navigate to your internal page instead of external URL
+  router.push("/dr-karthik-vallala-cardio-thoracic-surgeon");
+};
 
   const menuItems = [
     { name: "Home", icon: "🏠", section: "home" },
@@ -105,12 +187,57 @@ const Header = () => {
             ...logoImageStyle,
             height: isMobile ? "100px" : "120px",
           }}
-          onClick={() => scrollToSection("home")}
+          onClick={navigateToDoctorProfile}
         />
       </div>
 
       {!isMobile && (
         <>
+          <div style={searchContainerStyle} ref={searchRef}>
+            <form onSubmit={handleSearch} style={searchFormStyle}>
+              <input
+                type="text"
+                placeholder="Search doctors, specialties..."
+                value={searchQuery}
+                onChange={handleSearchInputChange}
+                onFocus={handleSearchInputFocus}
+                style={searchInputStyle}
+              />
+              <button type="submit" style={searchButtonStyle}>
+                <span style={searchIconStyle}>🔍</span>
+              </button>
+            </form>
+            
+            <AnimatePresence>
+              {showSuggestions && (filteredSuggestions.length > 0) && (
+                <motion.div
+                  style={suggestionsContainerStyle}
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -10 }}
+                  transition={{ duration: 0.2 }}
+                >
+                  {filteredSuggestions.map((suggestion, index) => (
+                    <div
+                      key={index}
+                      style={suggestionItemStyle}
+                      onClick={() => handleSuggestionClick(suggestion)}
+                      onMouseEnter={(e) => {
+                        (e.target as HTMLElement).style.backgroundColor = '#f3f4f6';
+                      }}
+                      onMouseLeave={(e) => {
+                        (e.target as HTMLElement).style.backgroundColor = 'white';
+                      }}
+                    >
+                      <span style={suggestionIconStyle}>🔍</span>
+                      {suggestion.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                    </div>
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+
           <nav style={navStyle}>
             {menuItems.map((item) => (
               <button
@@ -161,6 +288,45 @@ const Header = () => {
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.3 }}
           >
+            <div style={mobileSearchContainerStyle}>
+              <form onSubmit={handleSearch} style={mobileSearchFormStyle}>
+                <input
+                  type="text"
+                  placeholder="Search doctors, specialties..."
+                  value={searchQuery}
+                  onChange={handleSearchInputChange}
+                  onFocus={handleSearchInputFocus}
+                  style={mobileSearchInputStyle}
+                />
+                <button type="submit" style={mobileSearchButtonStyle}>
+                  <span style={searchIconStyle}>🔍</span>
+                </button>
+              </form>
+              
+              <AnimatePresence>
+                {showSuggestions && (filteredSuggestions.length > 0) && (
+                  <motion.div
+                    style={mobileSuggestionsContainerStyle}
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    {filteredSuggestions.map((suggestion, index) => (
+                      <div
+                        key={index}
+                        style={mobileSuggestionItemStyle}
+                        onClick={() => handleSuggestionClick(suggestion)}
+                      >
+                        <span style={suggestionIconStyle}>🔍</span>
+                        {suggestion.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                      </div>
+                    ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
             <nav style={mobileNavStyle}>
               {menuItems.map((item) => (
                 <button
@@ -187,7 +353,7 @@ const Header = () => {
   );
 };
 
-// Styles remain the same as in your original code
+// Styles
 const headerStyle: React.CSSProperties = {
   display: "flex",
   alignItems: "center",
@@ -219,6 +385,129 @@ const logoImageStyle: React.CSSProperties = {
   marginBottom: "-4rem",
   marginLeft: "-1.5rem",
   cursor: "pointer",
+};
+
+const searchContainerStyle: React.CSSProperties = {
+  flex: 1,
+  maxWidth: "300px",
+  margin: "0 1rem",
+  position: "relative",
+};
+
+const searchFormStyle: React.CSSProperties = {
+  display: "flex",
+  alignItems: "center",
+  width: "100%",
+};
+
+const searchInputStyle: React.CSSProperties = {
+  flex: 1,
+  padding: "0.75rem 1rem",
+  border: "1px solid #d1d5db",
+  borderRadius: "9999px 0 0 9999px",
+  outline: "none",
+  fontSize: "1rem",
+};
+
+const searchButtonStyle: React.CSSProperties = {
+  padding: "0.75rem 1rem",
+  backgroundColor: "#000000",
+  color: "white",
+  border: "none",
+  borderRadius: "0 9999px 9999px 0",
+  cursor: "pointer",
+};
+
+const searchIconStyle: React.CSSProperties = {
+  fontSize: "1rem",
+};
+
+const suggestionsContainerStyle: React.CSSProperties = {
+  position: "absolute",
+  top: "100%",
+  left: 0,
+  right: 0,
+  backgroundColor: "white",
+  border: "1px solid #e5e7eb",
+  borderRadius: "0.5rem",
+  boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+  zIndex: 1002,
+  maxHeight: "200px",
+  overflowY: "auto",
+  marginTop: "0.25rem",
+};
+
+const suggestionItemStyle: React.CSSProperties = {
+  padding: "0.75rem 1rem",
+  cursor: "pointer",
+  borderBottom: "1px solid #f3f4f6",
+  display: "flex",
+  alignItems: "center",
+  gap: "0.5rem",
+  fontSize: "0.9rem",
+  transition: "background-color 0.2s",
+};
+
+const suggestionIconStyle: React.CSSProperties = {
+  fontSize: "0.8rem",
+  opacity: 0.6,
+};
+
+const mobileSearchContainerStyle: React.CSSProperties = {
+  width: "100%",
+  marginBottom: "1.5rem",
+  position: "relative",
+};
+
+const mobileSearchFormStyle: React.CSSProperties = {
+  display: "flex",
+  alignItems: "center",
+  width: "100%",
+};
+
+const mobileSearchInputStyle: React.CSSProperties = {
+  flex: 1,
+  padding: "0.75rem 1rem",
+  border: "1px solid #d1d5db",
+  borderRadius: "9999px 0 0 9999px",
+  outline: "none",
+  fontSize: "1rem",
+};
+
+const mobileSearchButtonStyle: React.CSSProperties = {
+  padding: "0.75rem 1rem",
+  backgroundColor: "#000000",
+  color: "white",
+  border: "none",
+  borderRadius: "0 9999px 9999px 0",
+  cursor: "pointer",
+};
+
+const mobileSuggestionsContainerStyle: React.CSSProperties = {
+  position: "absolute",
+  top: "100%",
+  left: 0,
+  right: 0,
+  backgroundColor: "white",
+  border: "1px solid #e5e7eb",
+  borderRadius: "0.5rem",
+  boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+  zIndex: 1002,
+  maxHeight: "200px",
+  overflowY: "auto",
+  marginTop: "0.25rem",
+};
+
+const mobileSuggestionItemStyle: React.CSSProperties = {
+  padding: "0.75rem 1rem",
+  cursor: "pointer",
+  borderBottom: "1px solid #f3f4f6",
+  display: "flex",
+  alignItems: "center",
+  gap: "0.5rem",
+  fontSize: "0.9rem",
+  backgroundColor: "white",
+  transition: "background-color 0.2s",
 };
 
 const navStyle: React.CSSProperties = {
