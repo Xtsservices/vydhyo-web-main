@@ -184,10 +184,10 @@ const Header = () => {
           src="/images/logo.png"
           alt="Company Logo"
           style={{
-            ...logoImageStyle,
-            height: isMobile ? "100px" : "120px",
+        ...logoImageStyle,
+        height: isMobile ? "100px" : "120px",
           }}
-          onClick={navigateToDoctorProfile}
+          onClick={() => router.push("/")}
         />
       </div>
 
