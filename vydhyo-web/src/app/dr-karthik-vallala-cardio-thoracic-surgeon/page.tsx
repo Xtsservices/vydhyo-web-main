@@ -125,8 +125,6 @@ export default function DrKarthikVallalaProfile() {
               <div style={isMobile ? mobileDoctorDegreeStyle : doctorDegreeStyle}>MBBS, DNB (CT)</div>
               <div style={isMobile ? mobileDoctorSpecialtyStyle : doctorSpecialtyStyle}>Cardio Thoracic Surgeon</div>
               <div style={ratingContainerStyle}>
-                <span style={ratingStyle}>4.8 ★</span>
-                <span style={reviewCountStyle}>(124 reviews)</span>
               </div>
               <div style={experienceStyle}>12+ Years Experience</div>
             </div>
@@ -849,6 +847,8 @@ const aboutTextStyle: React.CSSProperties = {
   fontSize: "1rem",
   marginBottom: 16,
   lineHeight: 1.7,
+  textAlign: "justify", // Add this line
+  textJustify: "inter-word", // Add this for better spacing
 };
 
 const listStyle: React.CSSProperties = {
@@ -857,6 +857,8 @@ const listStyle: React.CSSProperties = {
   margin: "0 0 16px 24px",
   padding: 0,
   lineHeight: 1.7,
+  textAlign: "justify", // Add this line
+  textJustify: "inter-word", // Add this for better spacing
 };
 
 const sideCardStyle: React.CSSProperties = {
@@ -1035,6 +1037,8 @@ const confirmationDetailsStyle: React.CSSProperties = {
   lineHeight: 1.6,
   marginBottom: 24,
   width: "100%",
+   textAlign: "justify", // Add this line
+  textJustify: "inter-word", // Add this for better spacing
 };
 
 const sideCardTitleStyle: React.CSSProperties = {
@@ -1050,6 +1054,8 @@ const sideListStyle: React.CSSProperties = {
   margin: 0,
   paddingLeft: 18,
   lineHeight: 1.7,
+   textAlign: "justify", // Add this line
+  textJustify: "inter-word", // Add this for better spacing
 };
 
 const photosContainerStyle: React.CSSProperties = {

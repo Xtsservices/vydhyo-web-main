@@ -5,7 +5,6 @@ import { motion } from "framer-motion";
 interface FeatureCard {
   title: string;
   description: string;
-  image: string;
 }
 
 const itemVariants = {
@@ -18,17 +17,14 @@ const CitiesWeServe: React.FC = () => {
     {
       title: "Nizamabad",
       description: "Comprehensive healthcare network with leading hospitals and clinics offering specialized services.",
-      image: "./images/nizamabad.png",
     },
     {
       title: "Warangal",
       description: "Strong presence of verified healthcare providers and emergency services throughout the city.",
-      image: "./images/warangal.png",
     },
     {
       title: "Karimnagar",
       description: "Growing network of quality healthcare professionals and facilities for diverse medical needs",
-      image: "./images/karimnagar.png",
     },
   ];
 
@@ -228,13 +224,6 @@ const CitiesWeServe: React.FC = () => {
               whileHover={{ scale: 1.03 }}
               transition={{ type: "spring", stiffness: 400, damping: 10 }}
             >
-              <div className="feature-image-container">
-                <img 
-                  src={feature.image} 
-                  alt={feature.title}
-                  className="feature-image"
-                />
-              </div>
               <div className="feature-content">
                 <h3>{feature.title}</h3>
                 <p>{feature.description}</p>

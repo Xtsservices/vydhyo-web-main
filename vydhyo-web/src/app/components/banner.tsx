@@ -7,19 +7,30 @@ export default function Banner() {
         <div
             style={{
                 display: "flex",
+                flexDirection: "column",
                 alignItems: "center",
                 justifyContent: "space-between",
                 background: "linear-gradient(135deg, #0a2e5a 0%, #1a5b9a 100%)",
                 borderRadius: "16px",
-                padding: "24px 32px",
+                padding: "24px 20px",
                 boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
                 width: "100%",
-                minHeight: "120px",
+                minHeight: "auto",
                 margin: "0",
                 position: "relative",
                 overflow: "hidden",
                 color: "#ffffff",
-                marginTop: "5rem",
+                marginTop: "3rem",
+                boxSizing: "border-box",
+                gap: "24px",
+                // Media query for desktop
+                ...(window.innerWidth >= 768 && {
+                    flexDirection: "row",
+                    padding: "24px 32px",
+                    minHeight: "120px",
+                    marginTop: "5rem",
+                    gap: "0",
+                })
             }}
         >
             {/* Left Content Container */}
@@ -27,31 +38,50 @@ export default function Banner() {
                 display: "flex", 
                 alignItems: "center",
                 zIndex: 2,
-                flex: 1
+                flex: 1,
+                width: "100%",
+                justifyContent: "center",
+                flexDirection: "column",
+                textAlign: "center",
+                gap: "16px",
+                // Media query for desktop
+                ...(window.innerWidth >= 768 && {
+                    width: "auto",
+                    justifyContent: "flex-start",
+                    flexDirection: "row",
+                    textAlign: "left",
+                    gap: "0",
+                })
             }}>
                 {/* EMI Icon */}
                 <div
                     style={{
                         background: "rgba(255, 255, 255, 0.18)",
                         borderRadius: "50%",
-                        width: 100,
-                        height: 100,
+                        width: 80,
+                        height: 80,
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
-                        marginRight: 24,
+                        marginRight: 0,
                         flexShrink: 0,
                         boxShadow: "0 2px 8px rgba(10,46,90,0.10)",
                         border: "2px solid rgba(255,255,255,0.25)",
-                        backdropFilter: "blur(6px)"
+                        backdropFilter: "blur(6px)",
+                        // Media query for desktop
+                        ...(window.innerWidth >= 768 && {
+                            width: 100,
+                            height: 100,
+                            marginRight: 24,
+                        })
                     }}
                 >
                     <img
                         src="images/logo.png"
                         alt="Logo"
                         style={{
-                            width: 100,
-                            height: 100,
+                            width: "100%",
+                            height: "100%",
                             objectFit: "contain",
                             borderRadius: "8px",
                             background: "#f5fafd",
@@ -65,17 +95,25 @@ export default function Banner() {
                     <div
                         style={{
                             fontWeight: 700,
-                            fontSize: "1.5rem",
+                            fontSize: "1.3rem",
                             color: "#fff",
                             marginBottom: 4,
+                            // Media query for desktop
+                            ...(window.innerWidth >= 768 && {
+                                fontSize: "1.5rem",
+                            })
                         }}
                     >
                         No Cost EMI
                     </div>
                     <div style={{ 
                         color: "rgba(255, 255, 255, 0.9)", 
-                        fontSize: "1.1rem",
-                        lineHeight: "1.4"
+                        fontSize: "1rem",
+                        lineHeight: "1.4",
+                        // Media query for desktop
+                        ...(window.innerWidth >= 768 && {
+                            fontSize: "1.1rem",
+                        })
                     }}>
                         Get easy, interest-free EMI options for your treatment.
                     </div>
@@ -87,16 +125,29 @@ export default function Banner() {
                 display: "flex",
                 alignItems: "center",
                 zIndex: 2,
-                gap: "24px"
+                gap: "24px",
+                justifyContent: "center",
+                width: "100%",
+                // Media query for desktop
+                ...(window.innerWidth >= 768 && {
+                    justifyContent: "flex-end",
+                    width: "auto",
+                })
             }}>
                 {/* Main Image */}
                 <div style={{
-                    width: "200px",
-                    height: "150px",
+                    width: "160px",
+                    height: "120px",
                     borderRadius: "12px",
                     overflow: "hidden",
                     border: "2px solid rgba(255, 255, 255, 0.2)",
-                    marginRight: "5rem",
+                    marginRight: "0",
+                    // Media query for desktop
+                    ...(window.innerWidth >= 768 && {
+                        width: "200px",
+                        height: "150px",
+                        marginRight: "5rem",
+                    })
                 }}>
                     <img 
                         src="images/image.png"
@@ -108,8 +159,6 @@ export default function Banner() {
                         }}
                     />
                 </div>
-                
-               
             </div>
 
             {/* Decorative elements */}
@@ -121,7 +170,8 @@ export default function Banner() {
                 height: "40px",
                 background: "rgba(255, 255, 255, 0.1)",
                 borderRadius: "50%",
-                zIndex: 1
+                zIndex: 1,
+                display: window.innerWidth >= 768 ? "block" : "none"
             }} />
             
             <div style={{
@@ -132,7 +182,8 @@ export default function Banner() {
                 height: "30px",
                 background: "rgba(30, 182, 215, 0.3)",
                 borderRadius: "50%",
-                zIndex: 1
+                zIndex: 1,
+                display: window.innerWidth >= 768 ? "block" : "none"
             }} />
         </div>
     );
