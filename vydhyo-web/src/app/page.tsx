@@ -12,6 +12,7 @@ import Pricing from "./components/Pricing";
 import PrivacyPolicy from "./components/PrivacyPolicy";
 import Footer from "./components/Footer";
 import ContactUs from "./components/ContactUs";
+import Banner from "./components/banner";
 
 export default function Home() {
   return (
@@ -24,9 +25,12 @@ export default function Home() {
       <section id="home">
         <IndexPage/>
       </section>
-      
+      {/* Banner Section */}
+        <Banner/>
+
+
       <div style={{ maxWidth: '100vw', overflowX: 'hidden' }}>
-        
+
         {/* About Us Section */}
         <section id="about-us">
           <AboutUs/>

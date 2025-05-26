@@ -7,43 +7,43 @@ import Image from 'next/image';
 const demoData = [
   { 
     title: 'Skilled Nursing', 
-    image: 'https://images.unsplash.com/photo-1581094271901-8022df4466f9?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
+    image: '/images/skill.png',
     category: 'HOME CARE',
     description: 'Professional nursing care from medication administration to wound care delivered by experienced, dedicated registered nurses.'
   },
   { 
     title: 'Elder Care', 
-    image: 'https://images.unsplash.com/photo-1579684385127-1ef15d508118?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
+    image: '/images/Elder.png',
     category: 'HOME CARE',
     description: 'Compassionate assistance for seniors, including daily living activities, medication management, and companionship by trained caregivers.'
   },
   { 
     title: 'Physiotherapy', 
-    image: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
+    image: '/images/therapy.png',
     category: 'HOME CARE',
     description: 'Personalized rehabilitation programs conducted at home by experienced therapists, helping patients recover mobility and strength.'
   },
   { 
     title: 'Post-Surgery Care', 
-    image: 'https://images.unsplash.com/photo-1581094271901-8022df4466f9?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
+    image: '/images/post.png',
     category: 'HOME CARE',
     description: 'Specialized recovery support following hospital discharge, ensuring proper healing and preventing complications.'
   },
   { 
     title: 'Check Availability', 
-    image: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
+    image: '/images/check.png',
     category: 'BLOOD BANK',
     description: 'View real-time blood inventory in nearby hospitals.'
   },
   { 
     title: 'Locate Centers', 
-    image: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
+    image: '/images/locate.png',
     category: 'BLOOD BANK',
     description: 'Find verified blood banks in your locality.'
   },
   { 
     title: 'Receive Updates', 
-    image: 'https://images.unsplash.com/photo-1581094271901-8022df4466f9?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80',
+    image: '/images/up.png',
     category: 'BLOOD BANK',
     description: 'Get notifications when your blood type is available.'
   },
