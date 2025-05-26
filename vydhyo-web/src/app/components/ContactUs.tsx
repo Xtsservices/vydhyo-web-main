@@ -20,7 +20,7 @@ const barData = [
 const socialMediaLinks = [
     { name: "Facebook", icon: faFacebook, url: "https://facebook.com/vydyo" },
     { name: "Twitter", icon: faTwitter, url: "https://twitter.com/vydyo" },
-    { name: "Instagram", icon: faInstagram, url: "https://instagram.com/vydyo" },
+    { name: "Instagram", icon: faInstagram, url: "https://www.instagram.com/vydhyo/profilecard/?igsh=ZGFzM25temd4bWZ4" },
     { name: "LinkedIn", icon: faLinkedin, url: "https://linkedin.com/company/vydyo" },
     { name: "YouTube", icon: faYoutube, url: "https://youtube.com/vydyo" },
 ];
@@ -684,7 +684,12 @@ const ContactUs: React.FC = () => {
                         }}>
                             <div style={{ marginBottom: 12 }}>
                                 <span style={{ fontWeight: 500, color: "#1e293b" }}>Call:</span> 
-                                <span style={{ color: "#64748b" }}> +91-XXXXXXXXXX</span>
+                                <a 
+                                    href="tel:+919761234789" 
+                                    style={{ color: "#64748b", textDecoration: "none" }}
+                                >
+                                    +91-9761234789
+                                </a>
                             </div>
                             <div style={{ marginBottom: 12 }}>
                                 <span style={{ fontWeight: 500, color: "#1e293b" }}>Email:</span>{" "}
