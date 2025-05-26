@@ -1,79 +1,70 @@
 'use client';
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 export default function Banner() {
+    const [isDesktop, setIsDesktop] = useState(false);
+
+    useEffect(() => {
+        // This code runs only on the client
+        const handleResize = () => {
+            setIsDesktop(window.innerWidth >= 768);
+        };
+        handleResize(); // Set initial value
+
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
+
     return (
         <div
             style={{
                 display: "flex",
-                flexDirection: "column",
+                flexDirection: isDesktop ? "row" : "column",
                 alignItems: "center",
                 justifyContent: "space-between",
                 background: "linear-gradient(135deg, #0a2e5a 0%, #1a5b9a 100%)",
                 borderRadius: "16px",
-                padding: "24px 20px",
+                padding: isDesktop ? "24px 32px" : "24px 20px",
                 boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
                 width: "100%",
-                minHeight: "auto",
+                minHeight: isDesktop ? "120px" : "auto",
                 margin: "0",
                 position: "relative",
                 overflow: "hidden",
                 color: "#ffffff",
-                marginTop: "3rem",
+                marginTop: isDesktop ? "5rem" : "3rem",
                 boxSizing: "border-box",
-                gap: "24px",
-                // Media query for desktop
-                ...(window.innerWidth >= 768 && {
-                    flexDirection: "row",
-                    padding: "24px 32px",
-                    minHeight: "120px",
-                    marginTop: "5rem",
-                    gap: "0",
-                })
+                gap: isDesktop ? "0" : "24px",
             }}
         >
             {/* Left Content Container */}
-            <div style={{ 
-                display: "flex", 
+            <div style={{
+                display: "flex",
                 alignItems: "center",
                 zIndex: 2,
                 flex: 1,
-                width: "100%",
-                justifyContent: "center",
-                flexDirection: "column",
-                textAlign: "center",
-                gap: "16px",
-                // Media query for desktop
-                ...(window.innerWidth >= 768 && {
-                    width: "auto",
-                    justifyContent: "flex-start",
-                    flexDirection: "row",
-                    textAlign: "left",
-                    gap: "0",
-                })
+                width: isDesktop ? "auto" : "100%",
+                justifyContent: isDesktop ? "flex-start" : "center",
+                flexDirection: isDesktop ? "row" : "column",
+                textAlign: isDesktop ? "left" : "center",
+                gap: isDesktop ? "0" : "16px",
             }}>
                 {/* EMI Icon */}
                 <div
                     style={{
                         background: "rgba(255, 255, 255, 0.18)",
                         borderRadius: "50%",
-                        width: 80,
-                        height: 80,
+                        width: isDesktop ? 100 : 80,
+                        height: isDesktop ? 100 : 80,
                         display: "flex",
                         alignItems: "center",
                         justifyContent: "center",
-                        marginRight: 0,
+                        marginRight: isDesktop ? 24 : 0,
                         flexShrink: 0,
                         boxShadow: "0 2px 8px rgba(10,46,90,0.10)",
                         border: "2px solid rgba(255,255,255,0.25)",
                         backdropFilter: "blur(6px)",
-                        // Media query for desktop
-                        ...(window.innerWidth >= 768 && {
-                            width: 100,
-                            height: 100,
-                            marginRight: 24,
-                        })
                     }}
                 >
                     <img
@@ -89,67 +80,46 @@ export default function Banner() {
                         }}
                     />
                 </div>
-                
                 {/* Banner Text */}
                 <div>
                     <div
                         style={{
                             fontWeight: 700,
-                            fontSize: "1.3rem",
+                            fontSize: isDesktop ? "1.5rem" : "1.3rem",
                             color: "#fff",
                             marginBottom: 4,
-                            // Media query for desktop
-                            ...(window.innerWidth >= 768 && {
-                                fontSize: "1.5rem",
-                            })
                         }}
                     >
                         No Cost EMI
                     </div>
-                    <div style={{ 
-                        color: "rgba(255, 255, 255, 0.9)", 
-                        fontSize: "1rem",
+                    <div style={{
+                        color: "rgba(255, 255, 255, 0.9)",
+                        fontSize: isDesktop ? "1.1rem" : "1rem",
                         lineHeight: "1.4",
-                        // Media query for desktop
-                        ...(window.innerWidth >= 768 && {
-                            fontSize: "1.1rem",
-                        })
                     }}>
                         Get easy, interest-free EMI options for your treatment.
                     </div>
                 </div>
             </div>
-            
             {/* Right Side - Image and Logo */}
             <div style={{
                 display: "flex",
                 alignItems: "center",
                 zIndex: 2,
                 gap: "24px",
-                justifyContent: "center",
-                width: "100%",
-                // Media query for desktop
-                ...(window.innerWidth >= 768 && {
-                    justifyContent: "flex-end",
-                    width: "auto",
-                })
+                justifyContent: isDesktop ? "flex-end" : "center",
+                width: isDesktop ? "auto" : "100%",
             }}>
                 {/* Main Image */}
                 <div style={{
-                    width: "160px",
-                    height: "120px",
+                    width: isDesktop ? "200px" : "160px",
+                    height: isDesktop ? "150px" : "120px",
                     borderRadius: "12px",
                     overflow: "hidden",
                     border: "2px solid rgba(255, 255, 255, 0.2)",
-                    marginRight: "0",
-                    // Media query for desktop
-                    ...(window.innerWidth >= 768 && {
-                        width: "200px",
-                        height: "150px",
-                        marginRight: "5rem",
-                    })
+                    marginRight: isDesktop ? "5rem" : "0",
                 }}>
-                    <img 
+                    <img
                         src="images/image.png"
                         alt="Medical professionals"
                         style={{
@@ -160,7 +130,6 @@ export default function Banner() {
                     />
                 </div>
             </div>
-
             {/* Decorative elements */}
             <div style={{
                 position: "absolute",
@@ -171,9 +140,9 @@ export default function Banner() {
                 background: "rgba(255, 255, 255, 0.1)",
                 borderRadius: "50%",
                 zIndex: 1,
-                display: window.innerWidth >= 768 ? "block" : "none"
+                display: isDesktop ? "block" : "none"
             }} />
-            
+
             <div style={{
                 position: "absolute",
                 bottom: "-15px",
@@ -183,7 +152,7 @@ export default function Banner() {
                 background: "rgba(30, 182, 215, 0.3)",
                 borderRadius: "50%",
                 zIndex: 1,
-                display: window.innerWidth >= 768 ? "block" : "none"
+                display: isDesktop ? "block" : "none"
             }} />
         </div>
     );
